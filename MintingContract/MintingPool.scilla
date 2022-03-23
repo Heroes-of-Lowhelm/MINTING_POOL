@@ -1,0 +1,302 @@
+(* SPDX-License-Identifier: MIT *)
+scilla_version 0
+
+(***************************************************)
+(*               Associated library                *)
+(***************************************************)
+import IntUtils ListUtils 
+
+library MintingPool
+let one = Uint256 1
+let zero = Uint128 0
+let true = True
+let empty_string = ""
+let one_msg = 
+    fun (msg : Message) => 
+        let nil_msg = Nil {Message} in
+        Cons {Message} msg nil_msg   
+
+(* Dummy user-defined ADT *)
+type Error =
+| CodeIsOracle
+| CodeIsPendingRequest
+| CodeIsOracleAddressNotSet
+| CodeIsOwner
+| CodeIsNFTContractAddressNotSet
+| CodeIsCallerAddressNotSet
+| CodeIsBatchPendingRequest
+
+(* let cons_one_batch = 
+    fun (to: ByStr20) =>
+    fun (seed: Uint256) =>
+        BatchParam to empty_string seed
+
+let cons_all_batch =
+    fun (seeds: List (Uint256)) =>
+    fun (to: ByStr20) =>
+        let f = cons_one_batch to in
+        let batch_list_uint256 = @list_map Uint256 BatchParam in
+        batch_list_uint256 f seeds *)
+
+let make_error =
+    fun (result : Error) =>
+        let result_code = 
+        match result with
+        | CodeIsOracle               => Int32 -1
+        | CodeIsPendingRequest       => Int32 -2
+        | CodeIsOracleAddressNotSet  => Int32 -3
+        | CodeIsOwner                => Int32 -4
+        | CodeIsNFTContractAddressNotSet => Int32 -5
+        | CodeIsCallerAddressNotSet => Int32 -6
+        | CodeIsBatchPendingRequest => Int32 -7
+        end
+        in
+        { _exception : "Error"; code : result_code }
+
+
+(***************************************************)
+(*             The contract definition             *)
+(***************************************************)
+contract MintingPool 
+(
+    contract_owner: ByStr20
+)
+
+(* Mutable fields *)
+field oracleAddress: Option ByStr20 = None {ByStr20}
+field heroesNFTAddress: Option ByStr20 = None {ByStr20}
+field myRequests: Map Uint256 Bool = Emp Uint256 Bool
+field myBatchRequests: Map Uint256 Bool = Emp Uint256 Bool
+field requestedCallerCount: Uint256 = Uint256 0
+field processedCallerCount: Uint256 = Uint256 0
+(* Mapping for caller Address id to caller address *)
+field callerAddresses: Map Uint256 ByStr20 = Emp Uint256 ByStr20
+
+field requestedBatchCallerCount: Uint256 = Uint256 0
+field processedBatchCallerCount: Uint256 = Uint256 0
+(* Mapping for caller Address id to caller address *)
+field batchCallerAddresses: Map Uint256 ByStr20 = Emp Uint256 ByStr20
+
+(**************************************)
+(*             Procedures             *)
+(**************************************)
+
+procedure ThrowError(error: Error)
+    e = make_error error;
+    throw e
+end
+
+
+
+
+procedure IsNotOracle(address: ByStr20)
+    oracleAddressTmp <- oracleAddress;
+    match oracleAddressTmp with
+    | Some v =>
+        is_oracle = builtin eq v address;
+        match is_oracle with
+        | False =>
+            err = CodeIsOracle;
+            ThrowError err
+        | True =>
+        end
+    | None =>
+        err = CodeIsOracleAddressNotSet;
+        ThrowError err
+    end
+end
+
+
+procedure IsNotPendingRequest(id: Uint256)
+    isPendingRequest <- exists myRequests[id];
+    match isPendingRequest with
+    | False =>
+        err = CodeIsPendingRequest;
+        ThrowError err
+    | True =>
+    end
+end
+
+procedure IsNotBatchPendingRequest(id: Uint256)
+    isBatchPendingRequest <- exists myBatchRequests[id];
+    match isBatchPendingRequest with
+    | False =>
+        err = CodeIsBatchPendingRequest;
+        ThrowError err
+    | True =>
+    end
+end
+
+procedure IsNotOwner(address: ByStr20)
+    is_owner = builtin eq contract_owner address;
+    match is_owner with
+    | False =>
+        err = CodeIsOwner;
+        ThrowError err
+    | True =>
+    end
+end
+
+(***************************************)
+(*             Transitions             *)
+(***************************************)
+
+(* @dev: Set Oracle Contract address. Only contract owner allowed to invoke.   *)
+(* param oracleAddress:      Address of the oracle contract.                  *)
+transition setOracleAddress(oracleAddr : ByStr20)
+    IsNotOwner _sender;
+    oracleAddressTmp = Some {ByStr20} oracleAddr ;
+    oracleAddress := oracleAddressTmp
+end
+
+(* @dev: Set Heroes NFT Contract address. Only contract owner allowed to invoke.   *)
+(* param oracleAddress:      Address of the oracle contract.                  *)
+transition setHeroesNFTAddress(heroesNFTAddress : ByStr20)
+    IsNotOwner _sender;
+    heroesNFTAddressTmp = Some {ByStr20} heroesNFTAddress ;
+    heroesNFTAddress := heroesNFTAddressTmp
+end
+
+(* @dev: Transition for users to Mint NFT.This transition invokes requestRandomNumber() transition in the oracle contract   *)
+transition MintNFT()
+    oracleAddressTmp <- oracleAddress;
+    heroesNFTAddressTmp <- heroesNFTAddress;
+    match oracleAddressTmp with
+    | Some v =>
+        match heroesNFTAddressTmp with
+        | Some heroesValue =>
+            msg = {_tag: "requestRandomNumber"; _recipient: v; _amount: zero};
+            msgs = one_msg msg;
+            send msgs;
+            requestedCallerCountTmp <- requestedCallerCount;
+            callerAddresses[requestedCallerCountTmp] := _sender;
+            tmpVal = builtin add requestedCallerCountTmp one;
+            requestedCallerCount := tmpVal
+        | None =>
+            err = CodeIsNFTContractAddressNotSet;
+            ThrowError err
+        end
+    | None =>
+        err = CodeIsOracleAddressNotSet;
+        ThrowError err
+    end
+end
+
+transition BatchMintNFT()
+    oracleAddressTmp <- oracleAddress;
+    heroesNFTAddressTmp <- heroesNFTAddress;
+    match oracleAddressTmp with
+    | Some v =>
+        match heroesNFTAddressTmp with
+        | Some heroesValue =>
+            msg = {_tag: "requestBatchRandomNumber"; _recipient: v; _amount: zero};
+            msgs = one_msg msg;
+            send msgs;
+            requestedBatchCallerCountTmp <- requestedBatchCallerCount;
+            batchCallerAddresses[requestedBatchCallerCountTmp] := _sender;
+            tmpVal = builtin add requestedBatchCallerCountTmp one;
+            requestedBatchCallerCount := tmpVal
+        | None =>
+            err = CodeIsNFTContractAddressNotSet;
+            ThrowError err
+        end
+    | None =>
+        err = CodeIsOracleAddressNotSet;
+        ThrowError err
+    end
+end
+(* @dev: Receive request id from the oracle contract. Only oracle contract allowed to invoke.   *)
+(* param id:      Request id.                                                                   *)
+transition getRequestId(id: Uint256)
+    IsNotOracle _sender;
+    myRequests[id] := true;
+    e = {_eventname: "ReceivedNewRequestId"; id: id};
+    event e
+end
+
+transition getBatchRequestId(id: Uint256)
+    IsNotOracle _sender;
+    myBatchRequests[id] := true;
+    e = {_eventname: "ReceivedNewBatchRequestId"; id: id};
+    event e
+end
+
+(* @dev: Receive Random Number and request id from oracle contract and then invokes Mint() transition of the Heroes NFT contract. Only oracle contract allowed to invoke  *)
+(* param randomnumber:      Random Number.                                                                     *)
+(* param id:       Request id.                                                                             *)
+transition callback(random_number: Uint256, id: Uint256)
+    IsNotOracle _sender;
+    IsNotPendingRequest id;
+    e = {_eventname: "RandomNumberReceived"; random_number: random_number};
+    event e;
+    delete myRequests[id];
+    processedCallerCountTmp <- processedCallerCount;
+    callerAddress <- callerAddresses[processedCallerCountTmp];
+    delete callerAddresses[processedCallerCountTmp];
+    tmpVal = builtin add processedCallerCountTmp one;
+    processedCallerCount := tmpVal;
+    (* Call NFT contract's Mint function with the received random number *)
+    (* This contract address must be set as Minter in the NFT Contract *)
+    heroesNFTAddressTmp <- heroesNFTAddress;
+    match heroesNFTAddressTmp with
+    | Some v =>
+        match callerAddress with
+        | Some value =>
+            msg = {_tag: "Mint"; _recipient: v; _amount: zero; to: value; token_uri: ""; seed: random_number};
+            msgs = one_msg msg;
+            send msgs
+        | None =>
+            err = CodeIsCallerAddressNotSet;
+            ThrowError err
+        end
+    | None =>
+        err = CodeIsOracleAddressNotSet;
+        ThrowError err
+    end
+end
+
+transition callbackBatch(random_numbers: List (Uint256), id: Uint256)
+    IsNotOracle _sender;
+    IsNotBatchPendingRequest id;
+    e = {_eventname: "RandomNumberBatchReceived"; random_numbers: random_numbers};
+    event e;
+    delete myRequests[id];
+    processedBatchCallerCountTmp <- processedBatchCallerCount;
+    batchCallerAddress <- batchCallerAddresses[processedBatchCallerCountTmp];
+    delete batchCallerAddresses[processedBatchCallerCountTmp];
+    tmpVal = builtin add processedBatchCallerCountTmp one;
+    processedBatchCallerCount := tmpVal;
+
+    (* Call NFT contract's Mint function with the received random number *)
+    (* This contract address must be set as Minter in the NFT Contract *)
+    
+    heroesNFTAddressTmp <- heroesNFTAddress;
+    match heroesNFTAddressTmp with
+    | Some v =>
+        match batchCallerAddress with
+        | Some value =>
+            (* batchParams = cons_all_batch random_numbers value; *)
+            msg = {_tag: "BatchMint"; _recipient: v; _amount: zero; to: value; seeds: random_numbers};
+            msgs = one_msg msg;
+            send msgs               
+        | None =>
+            err = CodeIsCallerAddressNotSet;
+            ThrowError err
+        end
+        
+    | None =>
+        err = CodeIsOracleAddressNotSet;
+        ThrowError err
+    end
+end
+
+
+transition Heroes_MintCallback(to: ByStr20, token_id: Uint256, token_uri: String)
+    e = {_eventname: "HeroNFTIsMinted"; to: to; token_id: token_id; token_uri: token_uri};
+    event e
+end
+
+transition Heroes_BatchMintCallback()
+    e = {_eventname: "HeroesNFTBatchMintSuccessful"};
+    event e
+end
