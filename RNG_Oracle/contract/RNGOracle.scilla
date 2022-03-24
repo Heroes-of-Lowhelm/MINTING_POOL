@@ -61,6 +61,11 @@ field modulus: Uint256 = Uint256 1000
 field pendingH13Requests: Map Uint256 Bool = Emp Uint256 Bool
 field pendingH13BatchRequests: Map Uint256 Bool = Emp Uint256 Bool
 
+
+(* 3-5 Heroes Summons*)
+field pendingH35Requests: Map Uint256 Bool = Emp Uint256 Bool
+field pendingH35BatchRequests: Map Uint256 Bool = Emp Uint256 Bool
+
 (**************************************)
 (*             Procedures             *)
 (**************************************)
@@ -100,6 +105,21 @@ transition requestH13RandomNumber()
     send msgs
 end
 
+(* @dev: Generate random requset id and then returns it to the caller contract by invoking "getRequestId" transition  *)
+transition requestH35RandomNumber()
+    randNonceTemp <- randNonce;
+    cur_nonce = builtin add randNonceTemp one;
+    randNonce := cur_nonce;
+    blk <- & BLOCKNUMBER;
+    id = random cur_nonce blk _sender;
+    pendingH35Requests[id] := true;
+    e = {_eventname: "RequestedH35RandomNumber"; id: id; callerAddress: _sender};
+    event e;
+    msg = {_tag: "getH35RequestId"; _recipient: _sender; _amount: zero; id: id};
+    msgs = one_msg msg;
+    send msgs
+end
+
 
 transition requestH13BatchRandomNumber()
     randNonceTemp <- randNonce;
@@ -115,11 +135,25 @@ transition requestH13BatchRandomNumber()
     send msgs
 end
 
+transition requestH35BatchRandomNumber()
+    randNonceTemp <- randNonce;
+    cur_nonce = builtin add randNonceTemp one;
+    randNonce := cur_nonce;
+    blk <- & BLOCKNUMBER;
+    id = random cur_nonce blk _sender;
+    pendingH35BatchRequests[id] := true;
+    e = {_eventname: "RequestedH35BatchRandomNumber"; id: id; callerAddress: _sender};
+    event e;
+    msg = {_tag: "getH35BatchRequestId"; _recipient: _sender; _amount: zero; id: id};
+    msgs = one_msg msg;
+    send msgs
+end
+
 (* @dev: Returns Random Number to _callerAddress by invoking "callback" transition on it. Only contract owner allowed to invoke.   *)
 (* param randomNumber:       Generated Random Number                                                                              *)
-(* param callerAddress:        Original sender address which invokes "getTWAPPrice" transition.                                   *)
+(* param callerAddress:        Original sender address which invokes "request" transition.                                   *)
 (* param id:        Request id.                                                                                                   *)
-transition setRandomNumber(random_number: Uint256, caller_address: ByStr20, id: Uint256)
+transition setH13RandomNumber(random_number: Uint256, caller_address: ByStr20, id: Uint256)
     IsNotOwner _sender;
     isPendingRequest <- exists pendingH13Requests[id];
     match isPendingRequest with
@@ -136,7 +170,29 @@ transition setRandomNumber(random_number: Uint256, caller_address: ByStr20, id: 
     event e
 end
 
-transition setBatchRandomNumber(random_numbers: List (Uint256), caller_address: ByStr20, id: Uint256)
+
+(* @dev: Returns Random Number to _callerAddress by invoking "callback" transition on it. Only contract owner allowed to invoke.   *)
+(* param randomNumber:       Generated Random Number                                                                              *)
+(* param callerAddress:        Original sender address which invokes "request" transition.                                   *)
+(* param id:        Request id.                                                                                                   *)
+transition setH35RandomNumber(random_number: Uint256, caller_address: ByStr20, id: Uint256)
+    IsNotOwner _sender;
+    isPendingRequest <- exists pendingH35Requests[id];
+    match isPendingRequest with
+    | False =>
+        err = CodeIsPendingRequest;
+        ThrowError err
+    | True =>
+    end;
+    delete pendingH35Requests[id];
+    msg = {_tag: "callbackH35"; _recipient: caller_address; _amount: zero; random_number: random_number; id: id};
+    msgs = one_msg msg;
+    send msgs;
+    e = {_eventname: "SetH35RandomNumber"; random_number: random_number; caller_address: caller_address};
+    event e
+end
+
+transition setH13BatchRandomNumber(random_numbers: List (Uint256), caller_address: ByStr20, id: Uint256)
     IsNotOwner _sender;
     isPendingRequest <- exists pendingH13BatchRequests[id];
     match isPendingRequest with
@@ -150,5 +206,22 @@ transition setBatchRandomNumber(random_numbers: List (Uint256), caller_address: 
     msgs = one_msg msg;
     send msgs;
     e = {_eventname: "SetH13BatchRandomNumber"; random_numbers: random_numbers; caller_address: caller_address};
+    event e
+end
+
+transition setH35BatchRandomNumber(random_numbers: List (Uint256), caller_address: ByStr20, id: Uint256)
+    IsNotOwner _sender;
+    isPendingRequest <- exists pendingH35BatchRequests[id];
+    match isPendingRequest with
+    | False =>
+        err = CodeIsPendingRequest;
+        ThrowError err
+    | True =>
+    end;
+    delete pendingH35BatchRequests[id];
+    msg = {_tag: "callbackBatchH35"; _recipient: caller_address; _amount: zero; random_numbers: random_numbers; id: id};
+    msgs = one_msg msg;
+    send msgs;
+    e = {_eventname: "SetH35BatchRandomNumber"; random_numbers: random_numbers; caller_address: caller_address};
     event e
 end
