@@ -82,8 +82,16 @@ field batchCallerH13Addresses: Map Uint256 ByStr20 = Emp Uint256 ByStr20
 
 
 (* 3-5 Heroes Summon requests*)
-field my35Requests: Map Uint256 Bool = Emp Uint256 Bool
-field my35BatchRequests: Map Uint256 Bool = Emp Uint256 Bool
+field myH35Requests: Map Uint256 Bool = Emp Uint256 Bool
+field myH35BatchRequests: Map Uint256 Bool = Emp Uint256 Bool
+field requestedH35CallerCount: Uint256 = Uint256 0
+field processedH35CallerCount: Uint256 = Uint256 0
+field requestedH35BatchCallerCount: Uint256 = Uint256 0
+field processedH35BatchCallerCount: Uint256 = Uint256 0
+(* Mapping for caller Address id to caller address *)
+field callerH35Addresses: Map Uint256 ByStr20 = Emp Uint256 ByStr20
+(* Mapping for caller Address id to caller address *)
+field batchCallerH35Addresses: Map Uint256 ByStr20 = Emp Uint256 ByStr20
 
 
 
@@ -118,7 +126,7 @@ procedure IsNotOracle(address: ByStr20)
 end
 
 
-procedure IsNotPendingRequest(id: Uint256)
+procedure IsNotH13PendingRequest(id: Uint256)
     isPendingRequest <- exists myH13Requests[id];
     match isPendingRequest with
     | False =>
@@ -128,8 +136,28 @@ procedure IsNotPendingRequest(id: Uint256)
     end
 end
 
-procedure IsNotBatchPendingRequest(id: Uint256)
+procedure IsNotH35PendingRequest(id: Uint256)
+    isPendingRequest <- exists myH35Requests[id];
+    match isPendingRequest with
+    | False =>
+        err = CodeIsPendingRequest;
+        ThrowError err
+    | True =>
+    end
+end
+
+procedure IsNotH13BatchPendingRequest(id: Uint256)
     isBatchPendingRequest <- exists myH13BatchRequests[id];
+    match isBatchPendingRequest with
+    | False =>
+        err = CodeIsBatchPendingRequest;
+        ThrowError err
+    | True =>
+    end
+end
+
+procedure IsNotH35BatchPendingRequest(id: Uint256)
+    isBatchPendingRequest <- exists myH35BatchRequests[id];
     match isBatchPendingRequest with
     | False =>
         err = CodeIsBatchPendingRequest;
@@ -192,6 +220,35 @@ transition Mint13Heroes()
         ThrowError err
     end
 end
+
+
+
+(* @dev: Transition for users to Mint 3*-5* Heroes.This transition invokes requestRandomNumber() transition in the oracle contract   *)
+transition Mint35Heroes()
+    oracleAddressTmp <- oracleAddress;
+    heroesNFTAddressTmp <- heroesNFTAddress;
+    match oracleAddressTmp with
+    | Some v =>
+        match heroesNFTAddressTmp with
+        | Some heroesValue =>
+            msg = {_tag: "requestH35RandomNumber"; _recipient: v; _amount: zero};
+            msgs = one_msg msg;
+            send msgs;
+            requestedH35CallerCountTmp <- requestedH35CallerCount;
+            callerH35Addresses[requestedH35CallerCountTmp] := _sender;
+            tmpVal = builtin add requestedH35CallerCountTmp one;
+            requestedH35CallerCount := tmpVal
+        | None =>
+            err = CodeIsNFTContractAddressNotSet;
+            ThrowError err
+        end
+    | None =>
+        err = CodeIsOracleAddressNotSet;
+        ThrowError err
+    end
+end
+
+
 (* @dev: Transition for users to Batch Mint 1*-3* Heroes.This transition invokes requestBatchRandomNumber() transition in the oracle contract   *)
 transition BatchMint13Heroes()
     oracleAddressTmp <- oracleAddress;
@@ -216,12 +273,47 @@ transition BatchMint13Heroes()
         ThrowError err
     end
 end
+
+(* @dev: Transition for users to Batch Mint 3*-5* Heroes.This transition invokes requestBatchRandomNumber() transition in the oracle contract   *)
+transition BatchMint35Heroes()
+    oracleAddressTmp <- oracleAddress;
+    heroesNFTAddressTmp <- heroesNFTAddress;
+    match oracleAddressTmp with
+    | Some v =>
+        match heroesNFTAddressTmp with
+        | Some heroesValue =>
+            msg = {_tag: "requestH35BatchRandomNumber"; _recipient: v; _amount: zero};
+            msgs = one_msg msg;
+            send msgs;
+            requestedH35BatchCallerCountTmp <- requestedH35BatchCallerCount;
+            batchCallerH35Addresses[requestedH35BatchCallerCountTmp] := _sender;
+            tmpVal = builtin add requestedH35BatchCallerCountTmp one;
+            requestedH35BatchCallerCount := tmpVal
+        | None =>
+            err = CodeIsNFTContractAddressNotSet;
+            ThrowError err
+        end
+    | None =>
+        err = CodeIsOracleAddressNotSet;
+        ThrowError err
+    end
+end
+
 (* @dev: Receive request id from the oracle contract. Only oracle contract allowed to invoke.   *)
 (* param id:      Request id.                                                                   *)
 transition getH13RequestId(id: Uint256)
     IsNotOracle _sender;
     myH13Requests[id] := true;
     e = {_eventname: "ReceivedNewH13RequestId"; id: id};
+    event e
+end
+
+(* @dev: Receive request id from the oracle contract. Only oracle contract allowed to invoke.   *)
+(* param id:      Request id.                                                                   *)
+transition getH35RequestId(id: Uint256)
+    IsNotOracle _sender;
+    myH35Requests[id] := true;
+    e = {_eventname: "ReceivedNewH35RequestId"; id: id};
     event e
 end
 
@@ -232,12 +324,19 @@ transition getH13BatchRequestId(id: Uint256)
     event e
 end
 
+transition getH35BatchRequestId(id: Uint256)
+    IsNotOracle _sender;
+    myH35BatchRequests[id] := true;
+    e = {_eventname: "ReceivedNewBatchH35RequestId"; id: id};
+    event e
+end
+
 (* @dev: Receive Random Number and request id from oracle contract and then invokes Mint() transition of the Heroes NFT contract. Only oracle contract allowed to invoke  *)
 (* param randomnumber:      Random Number.                                                                     *)
 (* param id:       Request id.                                                                             *)
 transition callbackH13(random_number: Uint256, id: Uint256)
     IsNotOracle _sender;
-    IsNotPendingRequest id;
+    IsNotH13PendingRequest id;
     e = {_eventname: "RandomNumberH13Received"; random_number: random_number};
     event e;
     delete myH13Requests[id];
@@ -266,9 +365,45 @@ transition callbackH13(random_number: Uint256, id: Uint256)
     end
 end
 
+(* @dev: Receive Random Number and request id from oracle contract and then invokes Mint() transition of the Heroes NFT contract. Only oracle contract allowed to invoke  *)
+(* param randomnumber:      Random Number.                                                                     *)
+(* param id:       Request id.                                                                             *)
+transition callbackH35(random_number: Uint256, id: Uint256)
+    IsNotOracle _sender;
+    IsNotH35PendingRequest id;
+    e = {_eventname: "RandomNumberH35Received"; random_number: random_number};
+    event e;
+    delete myH35Requests[id];
+    processedH35CallerCountTmp <- processedH35CallerCount;
+    callerAddress <- callerH35Addresses[processedH35CallerCountTmp];
+    delete callerH35Addresses[processedH35CallerCountTmp];
+    tmpVal = builtin add processedH35CallerCountTmp one;
+    processedH35CallerCount := tmpVal;
+    (* Call NFT contract's Mint function with the received random number *)
+    (* This contract address must be set as Minter in the NFT Contract *)
+    heroesNFTAddressTmp <- heroesNFTAddress;
+    match heroesNFTAddressTmp with
+    | Some v =>
+        match callerAddress with
+        | Some value =>
+            msg = {_tag: "Mint"; _recipient: v; _amount: zero; to: value; token_uri: ""; seed: random_number; is_high_level: true};
+            msgs = one_msg msg;
+            send msgs
+        | None =>
+            err = CodeIsCallerAddressNotSet;
+            ThrowError err
+        end
+    | None =>
+        err = CodeIsOracleAddressNotSet;
+        ThrowError err
+    end
+end
+
+
+
 transition callbackBatchH13(random_numbers: List (Uint256), id: Uint256)
     IsNotOracle _sender;
-    IsNotBatchPendingRequest id;
+    IsNotH13BatchPendingRequest id;
     e = {_eventname: "RandomNumberH13BatchReceived"; random_numbers: random_numbers};
     event e;
     delete myH13BatchRequests[id];
@@ -288,6 +423,42 @@ transition callbackBatchH13(random_numbers: List (Uint256), id: Uint256)
         | Some value =>
             (* batchParams = cons_all_batch random_numbers value; *)
             msg = {_tag: "BatchMint"; _recipient: v; _amount: zero; to: value; seeds: random_numbers; is_high_level: false};
+            msgs = one_msg msg;
+            send msgs               
+        | None =>
+            err = CodeIsCallerAddressNotSet;
+            ThrowError err
+        end
+        
+    | None =>
+        err = CodeIsOracleAddressNotSet;
+        ThrowError err
+    end
+end
+
+
+transition callbackBatchH35(random_numbers: List (Uint256), id: Uint256)
+    IsNotOracle _sender;
+    IsNotH35BatchPendingRequest id;
+    e = {_eventname: "RandomNumberH35BatchReceived"; random_numbers: random_numbers};
+    event e;
+    delete myH35BatchRequests[id];
+    processedH35BatchCallerCountTmp <- processedH35BatchCallerCount;
+    batchCallerAddress <- batchCallerH35Addresses[processedH35BatchCallerCountTmp];
+    delete batchCallerH35Addresses[processedH35BatchCallerCountTmp];
+    tmpVal = builtin add processedH35BatchCallerCountTmp one;
+    processedH35BatchCallerCount := tmpVal;
+
+    (* Call NFT contract's Mint function with the received random number *)
+    (* This contract address must be set as Minter in the NFT Contract *)
+    
+    heroesNFTAddressTmp <- heroesNFTAddress;
+    match heroesNFTAddressTmp with
+    | Some v =>
+        match batchCallerAddress with
+        | Some value =>
+            (* batchParams = cons_all_batch random_numbers value; *)
+            msg = {_tag: "BatchMint"; _recipient: v; _amount: zero; to: value; seeds: random_numbers; is_high_level: true};
             msgs = one_msg msg;
             send msgs               
         | None =>
