@@ -443,20 +443,24 @@ procedure MintToken(to: ByStr20, seed: Uint256, is_high_level: Bool)
       match is_zero_four with
       | True => (* This case is Shasta*)
         token_name = "Shasta";
-        token_traits[token_id] := token_trait token_name token_level
+        token_trait = HeroesTrait token_name token_level;
+        token_traits[token_id] := token_trait
       | False =>
         match is_one_four with
         | True => (* This case is Calix*)
           token_name = "Calix";
-          token_traits[token_id] := token_trait token_name token_level
+          token_trait = HeroesTrait token_name token_level;
+          token_traits[token_id] := token_trait
         | False =>
           match is_two_four with
           | True => (* This case is Mia*)
             token_name = "Mia";
-            token_traits[token_id] := token_trait token_name token_level
+            token_trait = HeroesTrait token_name token_level;
+            token_traits[token_id] := token_trait
           | False => (* This case is Gui-Ping*)
             token_name = "Gui-Ping";
-            token_traits[token_id] := token_trait token_name token_level
+            token_trait = HeroesTrait token_name token_level;
+            token_traits[token_id] := token_trait
           end
         end
       end
@@ -467,25 +471,30 @@ procedure MintToken(to: ByStr20, seed: Uint256, is_high_level: Bool)
         match is_zero_five with
         | True => (* This case is Eryx*)
           token_name = "Eryx";
-          token_traits[token_id] := token_trait token_name token_level
+          token_trait = HeroesTrait token_name token_level;
+          token_traits[token_id] := token_trait
         | False =>
           match is_one_five with
           | True => (* This case is Sansa*)
             token_name = "Sansa";
-            token_traits[token_id] := token_trait token_name token_level
+            token_trait = HeroesTrait token_name token_level;
+            token_traits[token_id] := token_trait
           | False =>
             match is_two_five with
             | True => (* This case is Callan*)
               token_name = "Callan";
-              token_traits[token_id] := token_trait token_name token_level
+              token_trait = HeroesTrait token_name token_level;
+              token_traits[token_id] := token_trait
             | False =>
               match is_three_five with
               | True => (* This case is Bozhena*)
                 token_name = "Bozhena";
-                token_traits[token_id] := token_trait token_name token_level
+                token_trait = HeroesTrait token_name token_level;
+                token_traits[token_id] := token_trait
               | False => (* This case is Jovann*)
                 token_name = "Jovann";
-                token_traits[token_id] := token_trait token_name token_level
+                token_trait = HeroesTrait token_name token_level;
+                token_traits[token_id] := token_trait
               end
             end
           end
@@ -495,30 +504,36 @@ procedure MintToken(to: ByStr20, seed: Uint256, is_high_level: Bool)
         match is_zero_six with
         | True => (* This case is Elena*)
           token_name = "Elena";
-          token_traits[token_id] := token_trait token_name token_level
+          token_trait = HeroesTrait token_name token_level;
+          token_traits[token_id] := token_trait
         | False =>
           match is_one_six with
           | True => (* This case is Syviis*)
             token_name = "Syviis";
-            token_traits[token_id] := token_trait token_name token_level
+            token_trait = HeroesTrait token_name token_level;
+            token_traits[token_id] := token_trait
           | False =>
             match is_two_six with
             | True => (* This case is Amelia*)
               token_name = "Amelia";
-              token_traits[token_id] := token_trait token_name token_level
+              token_trait = HeroesTrait token_name token_level;
+              token_traits[token_id] := token_trait
             | False =>
               match is_three_six with
               | True =>(* This case is Donovan*)
                 token_name = "Donovan";
-                token_traits[token_id] := token_trait token_name token_level
+                token_trait = HeroesTrait token_name token_level;
+                token_traits[token_id] := token_trait
               | False =>
                 match is_four_six with
                 | True => (* This case is LEO*)
                   token_name = "LEO";
-                  token_traits[token_id] := token_trait token_name token_level
+                  token_trait = HeroesTrait token_name token_level;
+                  token_traits[token_id] := token_trait
                 | False => (* This case is Garrett*)
                   token_name = "Garrett";
-                  token_traits[token_id] := token_trait token_name token_level
+                  token_trait = HeroesTrait token_name token_level;
+                  token_traits[token_id] := token_trait
                 end
               end
             end
@@ -535,15 +550,18 @@ procedure MintToken(to: ByStr20, seed: Uint256, is_high_level: Bool)
       match is_zero_three with
       | True => (* This case is Olga*)
         token_name = "Olga";
-        token_traits[token_id] := token_trait token_name token_level
+        token_trait = HeroesTrait token_name token_level;
+        token_traits[token_id] := token_trait
       | False =>
         match is_one_three with
         | True => (* This case is Tiffany*)
           token_name = "Tiffany";
-          token_traits[token_id] := token_trait token_name token_level
+          token_trait = HeroesTrait token_name token_level;
+          token_traits[token_id] := token_trait
         | False => (* This case is Nuru*)
           token_name = "Nuru";
-          token_traits[token_id] := token_trait token_name token_level
+          token_trait = HeroesTrait token_name token_level;
+          token_traits[token_id] := token_trait
         end
       end
     | False =>
@@ -553,15 +571,18 @@ procedure MintToken(to: ByStr20, seed: Uint256, is_high_level: Bool)
         match is_zero_three with
         | True => (* This case is Willow*)
           token_name = "Willow";
-          token_traits[token_id] := token_trait token_name token_level
+          token_trait = HeroesTrait token_name token_level;
+          token_traits[token_id] := token_trait
         | False =>
           match is_one_three with
           | True => (* This case is Karen*)
             token_name = "Karen";
-            token_traits[token_id] := token_trait token_name token_level
+            token_trait = HeroesTrait token_name token_level;
+            token_traits[token_id] := token_trait
           | False =>(* This case is Tabari*)
             token_name = "Tabari";
-            token_traits[token_id] := token_trait token_name token_level
+            token_trait = HeroesTrait token_name token_level;
+            token_traits[token_id] := token_trait
           end
         end
       | False =>(* This case is 3* Heroes Summons*)
@@ -569,20 +590,24 @@ procedure MintToken(to: ByStr20, seed: Uint256, is_high_level: Bool)
         match is_zero_four with
         | True => (* This case is Shasta*)
           token_name = "Shasta";
-          token_traits[token_id] := token_trait token_name token_level
+          token_trait = HeroesTrait token_name token_level;
+          token_traits[token_id] := token_trait
         | False =>
           match is_one_four with
           | True => (* This case is Calix*)
             token_name = "Calix";
-            token_traits[token_id] := token_trait token_name token_level
+            token_trait = HeroesTrait token_name token_level;
+            token_traits[token_id] := token_trait
           | False =>
             match is_two_four with
             | True => (* This case is Mia*)
               token_name = "Mia";
-              token_traits[token_id] := token_trait token_name token_level
+              token_trait = HeroesTrait token_name token_level;
+              token_traits[token_id] := token_trait
             | False => (* This case is Gui-Ping*)
               token_name = "Gui-Ping";
-              token_traits[token_id] := token_trait token_name token_level
+              token_trait = HeroesTrait token_name token_level;
+              token_traits[token_id] := token_trait
             end
           end
         end
