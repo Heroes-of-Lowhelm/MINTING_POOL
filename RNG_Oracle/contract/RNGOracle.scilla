@@ -56,8 +56,10 @@ contract RNGOracle
 (* Mutable fields *)
 field randNonce: Uint256 = Uint256 0
 field modulus: Uint256 = Uint256 1000
-field pendingRequests: Map Uint256 Bool = Emp Uint256 Bool
-field pendingBatchRequests: Map Uint256 Bool = Emp Uint256 Bool
+
+(* 1-3 Heroes Summons*)
+field pendingH13Requests: Map Uint256 Bool = Emp Uint256 Bool
+field pendingH13BatchRequests: Map Uint256 Bool = Emp Uint256 Bool
 
 (**************************************)
 (*             Procedures             *)
@@ -84,31 +86,31 @@ end
 (***************************************)
 
 (* @dev: Generate random requset id and then returns it to the caller contract by invoking "getRequestId" transition  *)
-transition requestRandomNumber()
+transition requestH13RandomNumber()
     randNonceTemp <- randNonce;
     cur_nonce = builtin add randNonceTemp one;
     randNonce := cur_nonce;
     blk <- & BLOCKNUMBER;
     id = random cur_nonce blk _sender;
-    pendingRequests[id] := true;
-    e = {_eventname: "RequestedRandomNumber"; id: id; callerAddress: _sender};
+    pendingH13Requests[id] := true;
+    e = {_eventname: "RequestedH13RandomNumber"; id: id; callerAddress: _sender};
     event e;
-    msg = {_tag: "getRequestId"; _recipient: _sender; _amount: zero; id: id};
+    msg = {_tag: "getH13RequestId"; _recipient: _sender; _amount: zero; id: id};
     msgs = one_msg msg;
     send msgs
 end
 
 
-transition requestBatchRandomNumber()
+transition requestH13BatchRandomNumber()
     randNonceTemp <- randNonce;
     cur_nonce = builtin add randNonceTemp one;
     randNonce := cur_nonce;
     blk <- & BLOCKNUMBER;
     id = random cur_nonce blk _sender;
-    pendingBatchRequests[id] := true;
-    e = {_eventname: "RequestedBatchRandomNumber"; id: id; callerAddress: _sender};
+    pendingH13BatchRequests[id] := true;
+    e = {_eventname: "RequestedH13BatchRandomNumber"; id: id; callerAddress: _sender};
     event e;
-    msg = {_tag: "getBatchRequestId"; _recipient: _sender; _amount: zero; id: id};
+    msg = {_tag: "getH13BatchRequestId"; _recipient: _sender; _amount: zero; id: id};
     msgs = one_msg msg;
     send msgs
 end
@@ -119,34 +121,34 @@ end
 (* param id:        Request id.                                                                                                   *)
 transition setRandomNumber(random_number: Uint256, caller_address: ByStr20, id: Uint256)
     IsNotOwner _sender;
-    isPendingRequest <- exists pendingRequests[id];
+    isPendingRequest <- exists pendingH13Requests[id];
     match isPendingRequest with
     | False =>
         err = CodeIsPendingRequest;
         ThrowError err
     | True =>
     end;
-    delete pendingRequests[id];
-    msg = {_tag: "callback"; _recipient: caller_address; _amount: zero; random_number: random_number; id: id};
+    delete pendingH13Requests[id];
+    msg = {_tag: "callbackH13"; _recipient: caller_address; _amount: zero; random_number: random_number; id: id};
     msgs = one_msg msg;
     send msgs;
-    e = {_eventname: "SetRandomNumber"; random_number: random_number; caller_address: caller_address};
+    e = {_eventname: "SetH13RandomNumber"; random_number: random_number; caller_address: caller_address};
     event e
 end
 
 transition setBatchRandomNumber(random_numbers: List (Uint256), caller_address: ByStr20, id: Uint256)
     IsNotOwner _sender;
-    isPendingRequest <- exists pendingBatchRequests[id];
+    isPendingRequest <- exists pendingH13BatchRequests[id];
     match isPendingRequest with
     | False =>
         err = CodeIsPendingRequest;
         ThrowError err
     | True =>
     end;
-    delete pendingBatchRequests[id];
-    msg = {_tag: "callbackBatch"; _recipient: caller_address; _amount: zero; random_numbers: random_numbers; id: id};
+    delete pendingH13BatchRequests[id];
+    msg = {_tag: "callbackBatchH13"; _recipient: caller_address; _amount: zero; random_numbers: random_numbers; id: id};
     msgs = one_msg msg;
     send msgs;
-    e = {_eventname: "SetBatchRandomNumber"; random_numbers: random_numbers; caller_address: caller_address};
+    e = {_eventname: "SetH13BatchRandomNumber"; random_numbers: random_numbers; caller_address: caller_address};
     event e
 end
