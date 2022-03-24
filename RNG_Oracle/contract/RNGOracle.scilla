@@ -66,6 +66,10 @@ field pendingH13BatchRequests: Map Uint256 Bool = Emp Uint256 Bool
 field pendingH35Requests: Map Uint256 Bool = Emp Uint256 Bool
 field pendingH35BatchRequests: Map Uint256 Bool = Emp Uint256 Bool
 
+
+(* Dark/Light Heroes Summons*)
+field pendingHDLRequests: Map Uint256 Bool = Emp Uint256 Bool
+
 (**************************************)
 (*             Procedures             *)
 (**************************************)
@@ -116,6 +120,21 @@ transition requestH35RandomNumber()
     e = {_eventname: "RequestedH35RandomNumber"; id: id; callerAddress: _sender};
     event e;
     msg = {_tag: "getH35RequestId"; _recipient: _sender; _amount: zero; id: id};
+    msgs = one_msg msg;
+    send msgs
+end
+
+(* @dev: Generate random requset id and then returns it to the caller contract by invoking "getRequestId" transition  *)
+transition requestHDLRandomNumber()
+    randNonceTemp <- randNonce;
+    cur_nonce = builtin add randNonceTemp one;
+    randNonce := cur_nonce;
+    blk <- & BLOCKNUMBER;
+    id = random cur_nonce blk _sender;
+    pendingHDLRequests[id] := true;
+    e = {_eventname: "RequestedHDLRandomNumber"; id: id; callerAddress: _sender};
+    event e;
+    msg = {_tag: "getHDLRequestId"; _recipient: _sender; _amount: zero; id: id};
     msgs = one_msg msg;
     send msgs
 end
@@ -191,6 +210,30 @@ transition setH35RandomNumber(random_number: Uint256, caller_address: ByStr20, i
     e = {_eventname: "SetH35RandomNumber"; random_number: random_number; caller_address: caller_address};
     event e
 end
+
+
+(* @dev: Returns Random Number to _callerAddress by invoking "callback" transition on it. Only contract owner allowed to invoke.   *)
+(* param randomNumber:       Generated Random Number                                                                              *)
+(* param callerAddress:        Original sender address which invokes "request" transition.                                   *)
+(* param id:        Request id.                                                                                                   *)
+transition setHDLRandomNumber(random_number: Uint256, caller_address: ByStr20, id: Uint256)
+    IsNotOwner _sender;
+    isPendingRequest <- exists pendingHDLRequests[id];
+    match isPendingRequest with
+    | False =>
+        err = CodeIsPendingRequest;
+        ThrowError err
+    | True =>
+    end;
+    delete pendingHDLRequests[id];
+    msg = {_tag: "callbackHDL"; _recipient: caller_address; _amount: zero; random_number: random_number; id: id};
+    msgs = one_msg msg;
+    send msgs;
+    e = {_eventname: "SetHDLRandomNumber"; random_number: random_number; caller_address: caller_address};
+    event e
+end
+
+
 
 transition setH13BatchRandomNumber(random_numbers: List (Uint256), caller_address: ByStr20, id: Uint256)
     IsNotOwner _sender;
