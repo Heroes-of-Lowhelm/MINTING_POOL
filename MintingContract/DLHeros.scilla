@@ -5,7 +5,7 @@ scilla_version 0
 (*               Associated library                *)
 (***************************************************)
 import BoolUtils ListUtils IntUtils
-library HeroTicketNFT
+library DLHeroesNFT
 
 type Operation =
 | Add
@@ -13,11 +13,8 @@ type Operation =
 
 (* Heroes type *)
 type HeroesTrait =
-| HeroesTrait of String String String
+| HeroesTrait of String String
 
-(* Batch Param type *)
-type BatchParam = 
-| BatchParam of ByStr20 String Uint256
 
 (* Global variables *)
 let zero_address = 0x0000000000000000000000000000000000000000
@@ -26,10 +23,12 @@ let true = True
 let zero = Uint256 0
 let one = Uint256 1
 let three = Uint256 3
-let four = Uint256 4
 let two = Uint256 2
-let empty_string = ""
+let hundred = Uint256 100
+let seventy = Uint256 70
+let ninety = Uint256 90
 
+let empty_string = ""
 let add_operation = Add
 let sub_operation = Sub
 let min_fee_bps = Uint128 1
@@ -102,23 +101,11 @@ let make_error =
     { _exception: "Error"; code: result_code }
 
 
-let cons_one_batch = 
-    fun (to: ByStr20) =>
-    fun (seed: Uint256) =>
-        BatchParam to empty_string seed
-
-let cons_all_batch =
-    fun (seeds: List (Uint256)) =>
-    fun (to: ByStr20) =>
-        let f = cons_one_batch to in
-        let batch_list_uint256 = @list_map Uint256 BatchParam in
-        batch_list_uint256 f seeds
-
 (***************************************************)
 (*             The contract definition             *)
 (***************************************************)
 
-contract HeroTicketNFT
+contract DLHeroesNFT
 (
   initial_contract_owner: ByStr20,
   (* Initial Base URI. e.g. `https://creatures-api.zilliqa.com/api/creature/` *)
@@ -402,116 +389,63 @@ procedure MintToken(to: ByStr20, seed: Uint256)
   total_supply := new_supply;
 
   (* create nft traits according to the seed *)
-  hundred = Uint256 100;
-  eighty = Uint256 80;
-  nightyeight = Uint256 98;
   restHundred = builtin rem seed hundred;
+
+  is_less_than_70 = builtin lt restHundred seventy;
+  is_less_than_90 = builtin lt restHundred ninety;
+
   restThree = builtin rem seed three;
   is_zero_three = builtin eq restThree zero;
   is_one_three = builtin eq restThree one;
-  is_two_three = builtin eq restThree two;
-  
-  restFour = builtin rem seed four;
-  is_zero_four = builtin eq restFour zero;
-  is_one_four = builtin eq restFour one;
-  is_two_four = builtin eq restFour two;
-  is_three_four = builtin eq restFour three;
 
-  is_less_than_80 = builtin lt restHundred eighty;
-  is_less_than_98 = builtin lt restHundred nightyeight;
-  match is_less_than_80 with
-  | True =>
-    match is_zero_three with
-    | True =>
-      (* this is 3* && Gui Ping*)
-      token_name = "Gui Ping - #3*";
-      level = "3*";
-      unit_type = "Gui Ping";
-      token_trait = HeroesTrait token_name level unit_type;
+  restTwo = builtin rem seed two;
+  is_zero_two = builtin eq restTwo zero;
+  
+  match is_less_than_70 with
+  | True => (* This case is 3* Heroes Summon*)
+    token_level = "3*";
+    match is_zero_two with
+    | True => (* This case is Hailey*)
+      token_name = "Hailey";
+      token_trait = HeroesTrait token_name token_level;
       token_traits[token_id] := token_trait
-    | False =>
-      match is_one_three with
-      | True =>
-        (* this is 3* && Calix *)
-        token_name = "Calix - #3*";
-        level = "3*";
-        unit_type = "Calix";
-        token_trait = HeroesTrait token_name level unit_type;
-        token_traits[token_id] := token_trait
-      | False =>
-        (* this is 3* && Mia *)
-        token_name = "Mia - #3*";
-        level = "3*";
-        unit_type = "Mia";
-        token_trait = HeroesTrait token_name level unit_type;
-        token_traits[token_id] := token_trait
-      end
+    | False => (* This case is Kostas*)
+      token_name = "Kostas";
+      token_trait = HeroesTrait token_name token_level;
+      token_traits[token_id] := token_trait
     end
   | False =>
-    match is_less_than_98 with
-    | True =>
+    match is_less_than_90 with
+    | True => (* This case is 4* *)
+      token_level = "4*";
       match is_zero_three with
-      | True =>
-        (* this is 4* && Eryx *)
-        token_name = "Eryx - #4*";
-        level = "4*";
-        unit_type = "Eryx";
-        token_trait = HeroesTrait token_name level unit_type;
+      | True => (* This case is Lillian*)
+        token_name = "Lillian";
+        token_trait = HeroesTrait token_name token_level;
         token_traits[token_id] := token_trait
       | False =>
         match is_one_three with
-        | True =>
-          (* this is 4* && Callan *)
-          token_name = "Callan - #4*";
-          level = "4*";
-          unit_type = "Callan";
-          token_trait = HeroesTrait token_name level unit_type;
+        | True => (* This case is Axel*)
+          token_name = "Axel";
+          token_trait = HeroesTrait token_name token_level;
           token_traits[token_id] := token_trait
-        | False =>
-          (* this is 4* && Bozhena *)
-          token_name = "Bozhena - #4*";
-          level = "4*";
-          unit_type = "Bozhena";
-          token_trait = HeroesTrait token_name level unit_type;
+        | False => (* This case is Badriyah*)
+          token_name = "Badriyah";
+          token_trait = HeroesTrait token_name token_level;
           token_traits[token_id] := token_trait
         end
       end
-    | False =>
-      match is_zero_four with
-      | True =>
-        (* this is 5* && Syviis *)
-        token_name = "Syviis - #5*";
-        level = "5*";
-        unit_type = "Syviis";
-        token_trait = HeroesTrait token_name level unit_type;
+    | False => (* This case is 5* *)
+      token_level = "5*";
+      match is_zero_two with
+      | True => (* This case is Aurora*)
+        token_name = "Aurora";
+        token_trait = HeroesTrait token_name token_level;
         token_traits[token_id] := token_trait
-      | False =>
-        match is_one_four with
-        | True =>
-          (* this is 5* && Amelia *)
-          token_name = "Amelia - #5*";
-          level = "5*";
-          unit_type = "Amelia";
-          token_trait = HeroesTrait token_name level unit_type;
-          token_traits[token_id] := token_trait
-        | False =>
-          match is_two_four with
-          | True =>
-            (* this is 5* && Donovan *)
-            token_name = "Donovan - #5*";
-            level = "5*";
-            unit_type = "Donovan";
-            token_trait = HeroesTrait token_name level unit_type;
-            token_traits[token_id] := token_trait
-          | False =>
-              (* this is 5* && Leo *)
-              token_name = "Leo - #5*";
-              level = "5*";
-              unit_type = "Leo";
-              token_trait = HeroesTrait token_name level unit_type;
-              token_traits[token_id] := token_trait
-          end
-        end
+      | False => (* This case is Gabriella*)
+        token_name = "Gabriella";
+        token_trait = HeroesTrait token_name token_level;
+        token_traits[token_id] := token_trait
       end
     end
   end
@@ -524,15 +458,6 @@ procedure SetTokenURI(token_id: Uint256, token_uri: String)
     (* noop *)
   | False =>
     token_uris[token_id] := token_uri
-  end
-end
-
-procedure HandleMint(info: BatchParam)
-  match info with
-  | BatchParam to token_uri seed=>
-    MintToken to seed;
-    token_id <- token_id_count;
-    SetTokenURI token_id token_uri
   end
 end
 
@@ -779,33 +704,6 @@ transition Mint(to: ByStr20, token_uri: String, seed: Uint256)
   send msgs
 end
 
-(* Mints multiple tokens with `token_uri`s and transfers them to multiple `to`s. *)
-(* Pass empty string to `token_uri` to use the concatenated token URI. i.e. `<base_uri><token_id>`. *)
-(* @param: to_token_uri_pair_list - List of Pair (to, token_uri). *)
-(* @Requirements: *)
-(* - The contract must not be paused. Otherwise, it must throw `PausedError` *)
-transition BatchMint(to: ByStr20, seeds: List (Uint256))
-  RequireNotPaused;
-  cur_id <- token_id_count;
-  start_id = builtin add cur_id one;
-  to_token_uri_pair_list = cons_all_batch seeds to;
-  forall to_token_uri_pair_list HandleMint;
-  end_id <- token_id_count;
-  e = {
-    _eventname: "BatchMint";
-    to_token_uri_pair_list: to_token_uri_pair_list;
-    start_id: start_id;
-    end_id: end_id
-  };
-  event e;
-  msg_to_sender = {
-    _tag: "Heroes_BatchMintCallback";
-    _recipient: _sender;
-    _amount: Uint128 0
-  };
-  msgs = one_msg msg_to_sender;
-  send msgs
-end
 
 (* Destroys `token_id`. *)
 (* @param: token_id - Unique ID of the NFT to be destroyed *)
