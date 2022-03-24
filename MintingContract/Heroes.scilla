@@ -410,30 +410,32 @@ procedure MintToken(to: ByStr20, seed: Uint256, is_high_level: Bool)
 
   (* create nft traits according to the seed and is_high_level*)
   restHundred = builtin rem seed hundred;
+
+  restThree = builtin rem seed three;
+  is_zero_three = builtin eq restThree zero;
+  is_one_three = builtin eq restThree one;
+
+  restFour = builtin rem seed four;
+  is_zero_four = builtin eq restFour zero;
+  is_one_four = builtin eq restFour one;
+  is_two_four = builtin eq restFour two;
+
+  restFive = builtin rem seed five;
+  is_zero_five = builtin eq restFive zero;
+  is_one_five = builtin eq restFive one;
+  is_two_five = builtin eq restFive two;
+  is_three_five = builtin eq restFive three;
+
+  restSix = builtin rem seed six;
+  is_zero_six = builtin eq restSix zero;
+  is_one_six = builtin eq restSix one;
+  is_two_six = builtin eq restSix two;
+  is_three_six = builtin eq restSix three;
+  is_four_six = builtin eq restSix four;
   match is_high_level with
-  | True =>
+  | True => (* This case is 3*-5* Heroes Summons*)
     is_less_than_80 = builtin lt restHundred eighty;
     is_less_than_98 = builtin lt restHundred ninety_eight;
-
-    restFour = builtin rem seed four;
-    is_zero_four = builtin eq restFour zero;
-    is_one_four = builtin eq restFour one;
-    is_two_four = builtin eq restFour two;
-
-    restFive = builtin rem seed five;
-    is_zero_five = builtin eq restFive zero;
-    is_one_five = builtin eq restFive one;
-    is_two_five = builtin eq restFive two;
-    is_three_five = builtin eq restFive three;
-    is_four_five = builtin eq restFive four;
-
-    restSix = builtin rem seed six;
-    is_zero_six = builtin eq restSix zero;
-    is_one_six = builtin eq restSix one;
-    is_two_six = builtin eq restSix two;
-    is_three_six = builtin eq restSix three;
-    is_four_six = builtin eq restSix four;
-    is_five_six = builtin eq restSix five;
 
     match is_less_than_80 with
     | True => (* This case is 3* *)
@@ -524,8 +526,68 @@ procedure MintToken(to: ByStr20, seed: Uint256, is_high_level: Bool)
         end
       end
     end
-  | False =>
-    rest
+  | False => (* This case is 1* - 3* Heroes Summons*)
+    is_less_than_70 = builtin lt restHundred seventy;
+    is_less_than_95 = builtin lt restHundred ninety_five;
+    match is_less_than_70 with
+    | True => (* This case is 1* Heroes Summons*)
+      token_level = "1*";
+      match is_zero_three with
+      | True => (* This case is Olga*)
+        token_name = "Olga";
+        token_traits[token_id] := token_trait token_name token_level
+      | False =>
+        match is_one_three with
+        | True => (* This case is Tiffany*)
+          token_name = "Tiffany";
+          token_traits[token_id] := token_trait token_name token_level
+        | False => (* This case is Nuru*)
+          token_name = "Nuru";
+          token_traits[token_id] := token_trait token_name token_level
+        end
+      end
+    | False =>
+      match is_less_than_95 with
+      | True => (* This case is 2* Heroes Summons*)
+        token_level = "2*";
+        match is_zero_three with
+        | True => (* This case is Willow*)
+          token_name = "Willow";
+          token_traits[token_id] := token_trait token_name token_level
+        | False =>
+          match is_one_three with
+          | True => (* This case is Karen*)
+            token_name = "Karen";
+            token_traits[token_id] := token_trait token_name token_level
+          | False =>(* This case is Tabari*)
+            token_name = "Tabari";
+            token_traits[token_id] := token_trait token_name token_level
+          end
+        end
+      | False =>(* This case is 3* Heroes Summons*)
+        token_level = "3*";
+        match is_zero_four with
+        | True => (* This case is Shasta*)
+          token_name = "Shasta";
+          token_traits[token_id] := token_trait token_name token_level
+        | False =>
+          match is_one_four with
+          | True => (* This case is Calix*)
+            token_name = "Calix";
+            token_traits[token_id] := token_trait token_name token_level
+          | False =>
+            match is_two_four with
+            | True => (* This case is Mia*)
+              token_name = "Mia";
+              token_traits[token_id] := token_trait token_name token_level
+            | False => (* This case is Gui-Ping*)
+              token_name = "Gui-Ping";
+              token_traits[token_id] := token_trait token_name token_level
+            end
+          end
+        end
+      end
+    end
   end
 end
 
