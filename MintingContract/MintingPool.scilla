@@ -26,6 +26,7 @@ type Error =
 | CodeIsNFTContractAddressNotSet
 | CodeIsCallerAddressNotSet
 | CodeIsBatchPendingRequest
+| CodeIsDLNFTContractAddressNotSet
 
 (* let cons_one_batch = 
     fun (to: ByStr20) =>
@@ -50,6 +51,7 @@ let make_error =
         | CodeIsNFTContractAddressNotSet => Int32 -5
         | CodeIsCallerAddressNotSet => Int32 -6
         | CodeIsBatchPendingRequest => Int32 -7
+        | CodeIsDLNFTContractAddressNotSet => Int32 -8
         end
         in
         { _exception : "Error"; code : result_code }
@@ -66,6 +68,7 @@ contract MintingPool
 (* Mutable fields *)
 field oracleAddress: Option ByStr20 = None {ByStr20}
 field heroesNFTAddress: Option ByStr20 = None {ByStr20}
+field dlHeroesNFTAddress: Option ByStr20 = None {ByStr20}
 
 (* 1-3 Heroes Summon requests*)
 field myH13Requests: Map Uint256 Bool = Emp Uint256 Bool
@@ -94,6 +97,13 @@ field callerH35Addresses: Map Uint256 ByStr20 = Emp Uint256 ByStr20
 field batchCallerH35Addresses: Map Uint256 ByStr20 = Emp Uint256 ByStr20
 
 
+
+(* Dark/Light Heroes Summon requests*)
+field myHDLRequests: Map Uint256 Bool = Emp Uint256 Bool
+field requestedHDLCallerCount: Uint256 = Uint256 0
+field processedHDLCallerCount: Uint256 = Uint256 0
+(* Mapping for caller Address id to caller address *)
+field callerHDLAddresses: Map Uint256 ByStr20 = Emp Uint256 ByStr20
 
 
 (**************************************)
@@ -146,6 +156,16 @@ procedure IsNotH35PendingRequest(id: Uint256)
     end
 end
 
+procedure IsNotHDLPendingRequest(id: Uint256)
+    isPendingRequest <- exists myHDLRequests[id];
+    match isPendingRequest with
+    | False =>
+        err = CodeIsPendingRequest;
+        ThrowError err
+    | True =>
+    end
+end
+
 procedure IsNotH13BatchPendingRequest(id: Uint256)
     isBatchPendingRequest <- exists myH13BatchRequests[id];
     match isBatchPendingRequest with
@@ -189,11 +209,19 @@ transition setOracleAddress(oracleAddr : ByStr20)
 end
 
 (* @dev: Set Heroes NFT Contract address. Only contract owner allowed to invoke.   *)
-(* param oracleAddress:      Address of the oracle contract.                  *)
-transition setHeroesNFTAddress(heroesNFTAddress : ByStr20)
+(* param heroes_nft_address:      Address of the Heroes NFT address.                  *)
+transition setHeroesNFTAddress(heroes_nft_address : ByStr20)
     IsNotOwner _sender;
-    heroesNFTAddressTmp = Some {ByStr20} heroesNFTAddress ;
+    heroesNFTAddressTmp = Some {ByStr20} heroes_nft_address ;
     heroesNFTAddress := heroesNFTAddressTmp
+end
+
+(* @dev: Set Dark/Light Heroes NFT Contract address. Only contract owner allowed to invoke.   *)
+(* param dl_heroes_nft_address:      Address of the Dark/Light Heroes NFT address.                  *)
+transition setDLHeroesNFTAddress(dl_heroes_nft_address : ByStr20)
+    IsNotOwner _sender;
+    heroesNFTAddressTmp = Some {ByStr20} dl_heroes_nft_address;
+    dlHeroesNFTAddress := heroesNFTAddressTmp
 end
 
 (* @dev: Transition for users to Mint 1*-3* Heroes.This transition invokes requestRandomNumber() transition in the oracle contract   *)
@@ -240,6 +268,31 @@ transition Mint35Heroes()
             requestedH35CallerCount := tmpVal
         | None =>
             err = CodeIsNFTContractAddressNotSet;
+            ThrowError err
+        end
+    | None =>
+        err = CodeIsOracleAddressNotSet;
+        ThrowError err
+    end
+end
+
+(* @dev: Transition for users to Mint Dark/Light Heroes.This transition invokes requestRandomNumber() transition in the oracle contract   *)
+transition MintDLHeroes()
+    oracleAddressTmp <- oracleAddress;
+    dlHeroesNFTAddressTmp <- dlHeroesNFTAddress;
+    match oracleAddressTmp with
+    | Some v =>
+        match dlHeroesNFTAddressTmp with
+        | Some dlHeroesAddress =>
+            msg = {_tag: "requestHDLRandomNumber"; _recipient: v; _amount: zero};
+            msgs = one_msg msg;
+            send msgs;
+            requestedHDLCallerCountTmp <- requestedHDLCallerCount;
+            callerHDLAddresses[requestedHDLCallerCountTmp] := _sender;
+            tmpVal = builtin add requestedHDLCallerCountTmp one;
+            requestedHDLCallerCount := tmpVal
+        | None =>
+            err = CodeIsDLNFTContractAddressNotSet;
             ThrowError err
         end
     | None =>
@@ -317,6 +370,16 @@ transition getH35RequestId(id: Uint256)
     event e
 end
 
+(* @dev: Receive request id from the oracle contract. Only oracle contract allowed to invoke.   *)
+(* param id:      Request id.                                                                   *)
+transition getHDLRequestId(id: Uint256)
+    IsNotOracle _sender;
+    myHDLRequests[id] := true;
+    e = {_eventname: "ReceivedNewHDLRequestId"; id: id};
+    event e
+end
+
+
 transition getH13BatchRequestId(id: Uint256)
     IsNotOracle _sender;
     myH13BatchRequests[id] := true;
@@ -360,7 +423,7 @@ transition callbackH13(random_number: Uint256, id: Uint256)
             ThrowError err
         end
     | None =>
-        err = CodeIsOracleAddressNotSet;
+        err = CodeIsNFTContractAddressNotSet;
         ThrowError err
     end
 end
@@ -394,10 +457,45 @@ transition callbackH35(random_number: Uint256, id: Uint256)
             ThrowError err
         end
     | None =>
-        err = CodeIsOracleAddressNotSet;
+        err = CodeIsNFTContractAddressNotSet;
         ThrowError err
     end
 end
+
+(* @dev: Receive Random Number and request id from oracle contract and then invokes Mint() transition of the Heroes NFT contract. Only oracle contract allowed to invoke  *)
+(* param randomnumber:      Random Number.                                                                     *)
+(* param id:       Request id.                                                                             *)
+transition callbackHDL(random_number: Uint256, id: Uint256)
+    IsNotOracle _sender;
+    IsNotHDLPendingRequest id;
+    e = {_eventname: "RandomNumberHDLReceived"; random_number: random_number};
+    event e;
+    delete myHDLRequests[id];
+    processedHDLCallerCountTmp <- processedHDLCallerCount;
+    callerAddress <- callerHDLAddresses[processedHDLCallerCountTmp];
+    delete callerHDLAddresses[processedHDLCallerCountTmp];
+    tmpVal = builtin add processedHDLCallerCountTmp one;
+    processedHDLCallerCount := tmpVal;
+    (* Call NFT contract's Mint function with the received random number *)
+    (* This contract address must be set as Minter in the NFT Contract *)
+    dlHeroesNFTAddressTmp <- dlHeroesNFTAddress;
+    match dlHeroesNFTAddressTmp with
+    | Some v =>
+        match callerAddress with
+        | Some value =>
+            msg = {_tag: "Mint"; _recipient: v; _amount: zero; to: value; token_uri: ""; seed: random_number};
+            msgs = one_msg msg;
+            send msgs
+        | None =>
+            err = CodeIsCallerAddressNotSet;
+            ThrowError err
+        end
+    | None =>
+        err = CodeIsDLNFTContractAddressNotSet;
+        ThrowError err
+    end
+end
+
 
 
 
@@ -431,7 +529,7 @@ transition callbackBatchH13(random_numbers: List (Uint256), id: Uint256)
         end
         
     | None =>
-        err = CodeIsOracleAddressNotSet;
+        err = CodeIsNFTContractAddressNotSet;
         ThrowError err
     end
 end
@@ -467,13 +565,18 @@ transition callbackBatchH35(random_numbers: List (Uint256), id: Uint256)
         end
         
     | None =>
-        err = CodeIsOracleAddressNotSet;
+        err = CodeIsNFTContractAddressNotSet;
         ThrowError err
     end
 end
 
 
 transition Heroes_MintCallback(to: ByStr20, token_id: Uint256, token_uri: String)
+    e = {_eventname: "HeroNFTIsMinted"; to: to; token_id: token_id; token_uri: token_uri};
+    event e
+end
+
+transition DL_Heroes_MintCallback(to: ByStr20, token_id: Uint256, token_uri: String)
     e = {_eventname: "HeroNFTIsMinted"; to: to; token_id: token_id; token_uri: token_uri};
     event e
 end

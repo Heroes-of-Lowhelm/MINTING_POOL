@@ -693,7 +693,7 @@ transition Mint(to: ByStr20, token_uri: String, seed: Uint256)
     _amount: Uint128 0
   };
   msg_to_sender = {
-    _tag: "Heroes_MintCallback";
+    _tag: "DL_Heroes_MintCallback";
     _recipient: _sender;
     _amount: Uint128 0;
     to: to;
