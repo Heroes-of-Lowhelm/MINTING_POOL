@@ -270,6 +270,7 @@ let get_mainstat =
       end
     end
 
+
 let get_substat = 
   fun (gear_type: GearType) =>
   fun (seed: Uint256) =>
@@ -302,12 +303,339 @@ let get_substat =
       | True => 
         let substat_spec = ATKP in
         get_substat_number lv substat_spec seed
+      | False =>
+        match is_one_eight with
+        | True =>
+          let substat_spec = HP in
+          get_substat_number lv substat_spec seed
+        | False =>
+          match is_two_eight with
+          | True =>
+            let substat_spec = HPP in
+            get_substat_number lv substat_spec seed
+          | False =>
+            match is_three_eight with
+            | True =>
+              let substat_spec = SPD in
+              get_substat_number lv substat_spec seed
+            | False =>
+              match is_four_eight with
+              | True =>
+                let substat_spec = CRIT.RATEP in
+                get_substat_number lv substat_spec seed
+              | False =>
+                match is_five_eight with
+                | True =>
+                  let substat_spec = CRIT.DMGP in
+                  get_substat_number lv substat_spec seed
+                | False =>
+                  match is_six_eight with
+                  | True =>
+                    let substat_spec = ACC in
+                    get_substat_number lv substat_spec seed
+                  | False =>
+                    let substat_spec = RES in
+                    get_substat_number lv substat_spec seed
+                  end
+                end
+              end
+            end
+          end
+        end
       end
     | Helmet =>
+      match is_zero_eleven with
+      | True =>
+        let substat_spec = ATKP in
+        get_substat_number lv substat_spec seed
+      | False =>
+        match is_one_eleven with
+        | True => 
+          let substat_spec = ATK in
+          get_substat_number lv substat_spec seed
+        | False =>
+          match is_two_eleven with
+          | True =>
+            let substat_spec = HP in
+            get_substat_number lv substat_spec seed
+          | False =>
+            match is_three_eleven with
+            | True =>
+              let substat_spec = HPP in
+              get_substat_number lv substat_spec seed
+            | False =>
+              match is_four_eleven with
+              | True =>  
+                let substat_spec = DEF in
+                get_substat_number lv substat_spec seed
+              | False =>
+                match is_five_eleven with
+                | True =>
+                  let substat_spec = DEFP in
+                  get_substat_number lv substat_spec seed
+                | False =>
+                  match is_six_eleven with
+                  | True =>
+                    let substat_spec = SPD in
+                    get_substat_number lv substat_spec seed
+                  | False =>
+                    match is_seven_eleven with
+                    | True =>
+                      let substat_spec = CRIT.RATEP in
+                      get_substat_number lv substat_spec seed
+                    | False =>
+                      match is_eight_eleven with
+                      | True =>
+                        let substat_spec = CRIT.DMGP in
+                        get_substat_number lv substat_spec seed
+                      | False =>
+                        match is_nine_eleven with
+                        | True =>
+                          let substat_spec = ACC in
+                          get_substat_number lv substat_spec seed
+                        | False =>
+                          let substat_spec = RES in
+                          get_substat_number lv substat_spec seed
+                        end
+                      end
+                    end
+                  end
+                end
+              end
+            end
+          end
+      end
     | Armor =>
+      match is_zero_eight with
+      | True => 
+        let substat_spec = HP in
+        get_substat_number lv substat_spec seed
+      | False =>
+        match is_one_eight with
+        | True =>
+          let substat_spec = HPP in
+          get_substat_number lv substat_spec seed
+        | False =>
+          match is_two_eight with
+          | True =>
+            let substat_spec = DEFP in
+            get_substat_number lv substat_spec seed
+          | False =>
+            match is_three_eight with
+            | True =>
+              let substat_spec = SPD in
+              get_substat_number lv substat_spec seed
+            | False =>
+              match is_four_eight with
+              | True =>
+                let substat_spec = CRIT.RATEP in
+                get_substat_number lv substat_spec seed
+              | False =>
+                match is_five_eight with
+                | True =>
+                  let substat_spec = CRIT.DMGP in
+                  get_substat_number lv substat_spec seed
+                | False =>
+                  match is_six_eight with
+                  | True =>
+                    let substat_spec = ACC in
+                    get_substat_number lv substat_spec seed
+                  | False =>
+                    let substat_spec = RES in
+                    get_substat_number lv substat_spec seed
+                  end
+                end
+              end
+            end
+          end
+        end
+      end
     | Shoes =>
+      match is_zero_eleven with
+      | True =>
+        let substat_spec = ATKP in
+        get_substat_number lv substat_spec seed
+      | False =>
+        match is_one_eleven with
+        | True => 
+          let substat_spec = ATK in
+          get_substat_number lv substat_spec seed
+        | False =>
+          match is_two_eleven with
+          | True =>
+            let substat_spec = HP in
+            get_substat_number lv substat_spec seed
+          | False =>
+            match is_three_eleven with
+            | True =>
+              let substat_spec = HPP in
+              get_substat_number lv substat_spec seed
+            | False =>
+              match is_four_eleven with
+              | True =>  
+                let substat_spec = DEF in
+                get_substat_number lv substat_spec seed
+              | False =>
+                match is_five_eleven with
+                | True =>
+                  let substat_spec = DEFP in
+                  get_substat_number lv substat_spec seed
+                | False =>
+                  match is_six_eleven with
+                  | True =>
+                    let substat_spec = SPD in
+                    get_substat_number lv substat_spec seed
+                  | False =>
+                    match is_seven_eleven with
+                    | True =>
+                      let substat_spec = CRIT.RATEP in
+                      get_substat_number lv substat_spec seed
+                    | False =>
+                      match is_eight_eleven with
+                      | True =>
+                        let substat_spec = CRIT.DMGP in
+                        get_substat_number lv substat_spec seed
+                      | False =>
+                        match is_nine_eleven with
+                        | True =>
+                          let substat_spec = ACC in
+                          get_substat_number lv substat_spec seed
+                        | False =>
+                          let substat_spec = RES in
+                          get_substat_number lv substat_spec seed
+                        end
+                      end
+                    end
+                  end
+                end
+              end
+            end
+          end
+      end
     | Neclace =>
+      match is_zero_eleven with
+      | True =>
+        let substat_spec = ATKP in
+        get_substat_number lv substat_spec seed
+      | False =>
+        match is_one_eleven with
+        | True => 
+          let substat_spec = ATK in
+          get_substat_number lv substat_spec seed
+        | False =>
+          match is_two_eleven with
+          | True =>
+            let substat_spec = HP in
+            get_substat_number lv substat_spec seed
+          | False =>
+            match is_three_eleven with
+            | True =>
+              let substat_spec = HPP in
+              get_substat_number lv substat_spec seed
+            | False =>
+              match is_four_eleven with
+              | True =>  
+                let substat_spec = DEF in
+                get_substat_number lv substat_spec seed
+              | False =>
+                match is_five_eleven with
+                | True =>
+                  let substat_spec = DEFP in
+                  get_substat_number lv substat_spec seed
+                | False =>
+                  match is_six_eleven with
+                  | True =>
+                    let substat_spec = SPD in
+                    get_substat_number lv substat_spec seed
+                  | False =>
+                    match is_seven_eleven with
+                    | True =>
+                      let substat_spec = CRIT.RATEP in
+                      get_substat_number lv substat_spec seed
+                    | False =>
+                      match is_eight_eleven with
+                      | True =>
+                        let substat_spec = CRIT.DMGP in
+                        get_substat_number lv substat_spec seed
+                      | False =>
+                        match is_nine_eleven with
+                        | True =>
+                          let substat_spec = ACC in
+                          get_substat_number lv substat_spec seed
+                        | False =>
+                          let substat_spec = RES in
+                          get_substat_number lv substat_spec seed
+                        end
+                      end
+                    end
+                  end
+                end
+              end
+            end
+          end
+      end
     | Ring =>
+      match is_zero_eleven with
+      | True =>
+        let substat_spec = ATKP in
+        get_substat_number lv substat_spec seed
+      | False =>
+        match is_one_eleven with
+        | True => 
+          let substat_spec = ATK in
+          get_substat_number lv substat_spec seed
+        | False =>
+          match is_two_eleven with
+          | True =>
+            let substat_spec = HP in
+            get_substat_number lv substat_spec seed
+          | False =>
+            match is_three_eleven with
+            | True =>
+              let substat_spec = HPP in
+              get_substat_number lv substat_spec seed
+            | False =>
+              match is_four_eleven with
+              | True =>  
+                let substat_spec = DEF in
+                get_substat_number lv substat_spec seed
+              | False =>
+                match is_five_eleven with
+                | True =>
+                  let substat_spec = DEFP in
+                  get_substat_number lv substat_spec seed
+                | False =>
+                  match is_six_eleven with
+                  | True =>
+                    let substat_spec = SPD in
+                    get_substat_number lv substat_spec seed
+                  | False =>
+                    match is_seven_eleven with
+                    | True =>
+                      let substat_spec = CRIT.RATEP in
+                      get_substat_number lv substat_spec seed
+                    | False =>
+                      match is_eight_eleven with
+                      | True =>
+                        let substat_spec = CRIT.DMGP in
+                        get_substat_number lv substat_spec seed
+                      | False =>
+                        match is_nine_eleven with
+                        | True =>
+                          let substat_spec = ACC in
+                          get_substat_number lv substat_spec seed
+                        | False =>
+                          let substat_spec = RES in
+                          get_substat_number lv substat_spec seed
+                        end
+                      end
+                    end
+                  end
+                end
+              end
+            end
+          end
+      end
     end
 
 
