@@ -101,6 +101,27 @@ type GearType =
   | Shoes
   | Neclace
   | Ring
+  
+
+type GearLevelType = 
+  | Level1
+  | Level2
+  | Level3
+  | Level4
+  | Level5
+
+type  SubstatType = 
+  | ATK
+  | ATKP
+  | DEF
+  | DEFP
+  | HP
+  | HP%
+  | SPD
+  | CRIT.DMGP
+  | CRIT.RATEP
+  | ACCP
+  | RESP
 
 let make_error =
   fun (result: Error) =>
@@ -140,6 +161,7 @@ let cons_all_batch =
         let f = cons_one_batch to in
         let batch_list_uint256 = @list_map Uint256 BatchParam in
         batch_list_uint256 f seeds
+
 let get_mainstat = 
   fun (gear_type: GearType) =>
   fun (seed: Uint256) =>
@@ -248,20 +270,51 @@ let get_mainstat =
       end
     end
 
-let get_substat_1_2 = 
+let get_substat = 
   fun (gear_type: GearType) =>
   fun (seed: Uint256) =>
+  fun (lv: GearLevelType) =>
     let substat = 
+    let restEight = builtin rem seed eight in
+    let is_zero_eight = builtin eq restEight zero in
+    let is_one_eight = builtin eq restEight one in
+    let is_two_eight = builtin eq restEight two in
+    let is_three_eight = builtin eq restEight three in
+    let is_four_eight = builtin eq restEight four in
+    let is_five_eight = builtin eq restEight five in
+    let is_six_eight = builtin eq restEight six in
+
+    let restEleven = builtin rem seed eleven in
+    let is_zero_eleven = builtin eq restEleven zero in
+    let is_one_eleven = builtin eq restEleven one in
+    let is_two_eleven = builtin eq restEleven two in
+    let is_three_eleven = builtin eq restEleven three in
+    let is_four_eleven = builtin eq restEleven four in
+    let is_five_eleven = builtin eq restEleven five in
+    let is_six_eleven = builtin eq restEleven fix in
+    let is_seven_eleven = builtin eq restEleven seven in
+    let is_eight_eleven = builtin eq restEleven eight in
+    let is_nine_eleven = builtin eq restEleven nine in
 
     match gear_type with
     | Weapon =>
-
+      match is_zero_eight with
+      | True => 
+        let substat_spec = ATKP in
+        get_substat_number lv substat_spec seed
+      end
     | Helmet =>
     | Armor =>
     | Shoes =>
     | Neclace =>
     | Ring =>
     end
+
+
+let get_substat_number = 
+  fun (lv: GearLevelType)
+  fun (substat_spec: SubstatType)
+  fun (seed: Uint256)
 
 (***************************************************)
 (*             The contract definition             *)
