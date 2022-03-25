@@ -1,6 +1,6 @@
 # HOL-MINTING-PREMIUM-HEROES
 
-### Summery
+### Summary
 ### 3*-5* Hero Summons
 #### (Spends $HOL)
 - 80% 3*
