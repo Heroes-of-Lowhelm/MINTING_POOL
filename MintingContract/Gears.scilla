@@ -94,6 +94,14 @@ type Error =
   | ZeroAddressDestinationError
   | ThisAddressDestinationError
 
+type GearType = 
+  | Weapon
+  | Helmet
+  | Armor
+  | Shoes
+  | Neclace
+
+
 let make_error =
   fun (result: Error) =>
     let result_code = 
