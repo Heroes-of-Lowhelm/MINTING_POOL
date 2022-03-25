@@ -198,7 +198,7 @@ Spends $HOL
 - 5* Lowhelm’s King Ring (ring)
 - 5* Lowhelm’s King Necklace (Neclace)
 
-### List of traits:
+### List of SubStat traits:
 - Life Set (+15% HP)(Req:2 Pieces)
 - Harden Set (+15% DEF)(Req:2 Pieces)
 - Strength Set (+35% ATK)(Req:4 Pieces)
@@ -207,7 +207,10 @@ Spends $HOL
 - Explosion Set (+40% Crit.DMG)(Req: 4 Pieces)
 - Vampire Set (+20% Life-Steal)(Req:4 Pieces)
 
-### Equipment Traits
+### CHAOTIC Equipment Trait:
+0.25% chance for ANY gear to have CHAOTIC TRAIT which adds 1 more random substat to the gear
+
+### Equipment Traits Notes
 Each equipment has following traits:
 1) 1 or more random Substat depending on natural star grade level
 2) 0.25% chance for gear to have CHAOTIC TRAIT which adds 1 more random substat to the gear
