@@ -100,7 +100,7 @@ type GearType =
   | Armor
   | Shoes
   | Neclace
-
+  | Ring
 
 let make_error =
   fun (result: Error) =>
@@ -140,6 +140,128 @@ let cons_all_batch =
         let f = cons_one_batch to in
         let batch_list_uint256 = @list_map Uint256 BatchParam in
         batch_list_uint256 f seeds
+let get_mainstat = 
+  fun (gear_type: GearType) =>
+  fun (seed: Uint256) =>
+    let mainstat = 
+    let restSeven = builtin rem seed seven in
+    let is_zero_seven = builtin eq restSeven zero in
+    let is_one_seven = builtin eq restSeven one in
+    let is_two_seven = builtin eq restSeven two in
+    let is_three_seven = builtin eq restSeven three in
+    let is_four_seven = builtin eq restSeven four in
+    let is_five_seven = builtin eq restSeven five in
+    let restEight = builtin rem seed eight in
+    let is_zero_eight = builtin eq restEight zero in
+    let is_one_eight = builtin eq restEight one in
+    let is_two_eight = builtin eq restEight two in
+    let is_three_eight = builtin eq restEight three in
+    let is_four_eight = builtin eq restEight four in
+    let is_five_eight = builtin eq restEight five in
+    let is_six_eight = builtin eq restEight six in
+    match gear_type with
+    | Weapon => "ATTACK"
+    | Helmet => "HP"
+    | Armor => "DEF"
+    | Shoes =>
+      match is_zero_seven with
+      | True => "SPD"
+      | False =>
+        match is_one_seven with
+        | True => "ATK"
+        | False =>
+          match is_two_seven with
+          | True => "ATK%"
+          | False =>
+            match is_three_seven with
+            | True => "HP"
+            | False =>
+              match is_four_seven with
+              | True => "HP%"
+              | False =>
+                match is_five_seven with
+                | True => "DEF"
+                | False => "DEF%"
+                end
+              end
+            end
+          end
+        end
+      end
+    | Neclace =>
+      match is_zero_eight with
+      | True => "Crit.Rate%"
+      | False =>
+        match is_one_eight with
+        | True => "Crit.DMG%"
+        | False =>
+          match is_two_eight with
+          | True => "ATK%"
+          | False =>
+            match is_three_eight with
+            | True => "ATK"
+            | False =>
+              match is_four_eight with
+              | True => "HP"
+              | False =>
+                match is_five_eight with
+                | True => "HP%"
+                | False =>
+                  match is_six_eight with
+                  | True => "DEF"
+                  | False => "DEF%"
+                  end
+                end
+              end
+            end
+          end
+        end
+      end
+    | Ring =>
+      match is_zero_eight with
+      | True => "ACC"
+      | False =>
+        match is_one_eight with
+        | True => "RES"
+        | False =>
+          match is_two_eight with
+          | True => "ATK"
+          | False =>
+            match is_three_eight with
+            | True => "ATK%"
+            | False =>
+              match is_four_eight with
+              | True => "HP%"
+              | False =>
+                match is_five_eight with
+                | True => "HP"
+                | False =>
+                  match is_six_eight with
+                  | True => "DEF"
+                  | False => "DEF%"
+                  end
+                end
+              end
+            end
+          end
+        end
+      end
+    end
+
+let get_substat_1_2 = 
+  fun (gear_type: GearType) =>
+  fun (seed: Uint256) =>
+    let substat = 
+
+    match gear_type with
+    | Weapon =>
+
+    | Helmet =>
+    | Armor =>
+    | Shoes =>
+    | Neclace =>
+    | Ring =>
+    end
 
 (***************************************************)
 (*             The contract definition             *)
