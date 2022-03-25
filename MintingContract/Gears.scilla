@@ -28,6 +28,25 @@ let one = Uint256 1
 let three = Uint256 3
 let four = Uint256 4
 let two = Uint256 2
+let five = Uint256 5
+let six = Uint256 6
+let seven = Uint256 7
+let eight = Uint256 8
+let nine = Uint256 9
+let ten = Uint256 10
+let eleven = Uint256 11
+let twelve = Uint256 12
+let thirteen = Uint256 13
+let fourteen = Uint256 14
+let fifteen = Uint256 15
+let sixteen = Uint256 16
+let eighteen = Uint256 18
+let hundred = Uint256 100
+let eighty = Uint256 80
+let seventy = Uint256 70
+let ninety_five = Uint256 95
+let ninety_eight = Uint256 98
+
 let empty_string = ""
 
 let add_operation = Add
@@ -379,7 +398,7 @@ end
 (* - `to` must not be the zero address. Otherwise, it must throw `ZeroAddressDestinationError` *)
 (* - `to` must not be `_this_address`. Otherwise, it must throw `ThisAddressDestinationError` *)
 (* - `_sender` must be a minter. Otherwise, it must throw `NotMinterError` *)
-procedure MintToken(to: ByStr20, seed: Uint256)
+procedure MintToken(to: ByStr20, seed: Uint256, is_high_level: Bool)
   RequireValidDestination to;
 
   IsMinter _sender;
@@ -402,118 +421,309 @@ procedure MintToken(to: ByStr20, seed: Uint256)
   total_supply := new_supply;
 
   (* create nft traits according to the seed *)
-  hundred = Uint256 100;
-  eighty = Uint256 80;
-  nightyeight = Uint256 98;
   restHundred = builtin rem seed hundred;
-  restThree = builtin rem seed three;
-  is_zero_three = builtin eq restThree zero;
-  is_one_three = builtin eq restThree one;
-  is_two_three = builtin eq restThree two;
-  
-  restFour = builtin rem seed four;
-  is_zero_four = builtin eq restFour zero;
-  is_one_four = builtin eq restFour one;
-  is_two_four = builtin eq restFour two;
-  is_three_four = builtin eq restFour three;
-
   is_less_than_80 = builtin lt restHundred eighty;
-  is_less_than_98 = builtin lt restHundred nightyeight;
-  match is_less_than_80 with
-  | True =>
-    match is_zero_three with
-    | True =>
-      (* this is 3* && Gui Ping*)
-      token_name = "Gui Ping - #3*";
-      level = "3*";
-      unit_type = "Gui Ping";
-      token_trait = HeroesTrait token_name level unit_type;
-      token_traits[token_id] := token_trait
-    | False =>
-      match is_one_three with
-      | True =>
-        (* this is 3* && Calix *)
-        token_name = "Calix - #3*";
-        level = "3*";
-        unit_type = "Calix";
-        token_trait = HeroesTrait token_name level unit_type;
+  is_less_than_98 = builtin lt restHundred ninety_eight;
+  is_less_than_70 = builtin lt restHundred seventy;
+  is_less_than_95 = builtin lt rest_Hundred ninety_five;
+  
+  restEighteen = builtin rem seed eighteen;
+  is_0_18 = builtin eq restEighteen zero;
+  is_1_18 = builtin eq restEighteen one;
+  is_2_18 = builtin eq restEighteen two;
+  is_3_18 = builtin eq restEighteen three;
+  is_4_18 = builtin eq restEighteen four;
+  is_5_18 = builtin eq restEighteen five;
+  is_6_18 = builtin eq restEighteen six;
+  is_7_18 = builtin eq restEighteen seven;
+  is_8_18 = builtin eq restEighteen eight;
+  is_9_18 = builtin eq restEighteen nine;
+  is_10_18 = builtin eq restEighteen ten;
+  is_11_18 = builtin eq restEighteen eleven;
+  is_12_18 = builtin eq restEighteen twelve;
+  is_13_18 = builtin eq restEighteen thirteen;
+  is_14_18 = builtin eq restEighteen fourteen;
+  is_15_18 = builtin eq restEighteen fifteen;
+  is_16_18 = builtin eq restEighteen sixteen;
+
+  
+  match is_high_level with
+  | True => (* This case is 3* ~ 5* Gear Summons*)
+    match is_less_than_80 with
+    | True => (* This case is 3**)
+      token_level = "3*";
+      match is_0_18 with
+      | True => (* This case is Steel Sword*)
+        token_name = "Steel Sword*";
+        token_trait = HeroesTrait token_name token_level;
         token_traits[token_id] := token_trait
       | False =>
-        (* this is 3* && Mia *)
-        token_name = "Mia - #3*";
-        level = "3*";
-        unit_type = "Mia";
-        token_trait = HeroesTrait token_name level unit_type;
-        token_traits[token_id] := token_trait
-      end
-    end
-  | False =>
-    match is_less_than_98 with
-    | True =>
-      match is_zero_three with
-      | True =>
-        (* this is 4* && Eryx *)
-        token_name = "Eryx - #4*";
-        level = "4*";
-        unit_type = "Eryx";
-        token_trait = HeroesTrait token_name level unit_type;
-        token_traits[token_id] := token_trait
-      | False =>
-        match is_one_three with
-        | True =>
-          (* this is 4* && Callan *)
-          token_name = "Callan - #4*";
-          level = "4*";
-          unit_type = "Callan";
-          token_trait = HeroesTrait token_name level unit_type;
-          token_traits[token_id] := token_trait
+        match is_1_18 with
+        | True => (* This case is Steel Helmet*)
+          token_name = "Steel Helmet";
         | False =>
-          (* this is 4* && Bozhena *)
-          token_name = "Bozhena - #4*";
-          level = "4*";
-          unit_type = "Bozhena";
-          token_trait = HeroesTrait token_name level unit_type;
-          token_traits[token_id] := token_trait
-        end
-      end
-    | False =>
-      match is_zero_four with
-      | True =>
-        (* this is 5* && Syviis *)
-        token_name = "Syviis - #5*";
-        level = "5*";
-        unit_type = "Syviis";
-        token_trait = HeroesTrait token_name level unit_type;
-        token_traits[token_id] := token_trait
-      | False =>
-        match is_one_four with
-        | True =>
-          (* this is 5* && Amelia *)
-          token_name = "Amelia - #5*";
-          level = "5*";
-          unit_type = "Amelia";
-          token_trait = HeroesTrait token_name level unit_type;
-          token_traits[token_id] := token_trait
-        | False =>
-          match is_two_four with
-          | True =>
-            (* this is 5* && Donovan *)
-            token_name = "Donovan - #5*";
-            level = "5*";
-            unit_type = "Donovan";
-            token_trait = HeroesTrait token_name level unit_type;
-            token_traits[token_id] := token_trait
+          match is_2_18 with
+          | True =>(* This case is Steel Armor*)
+            token_name = "Steel Armor";
           | False =>
-              (* this is 5* && Leo *)
-              token_name = "Leo - #5*";
-              level = "5*";
-              unit_type = "Leo";
-              token_trait = HeroesTrait token_name level unit_type;
-              token_traits[token_id] := token_trait
+            match is_3_18 with
+            | True => (* This case is Steel Shoes*)
+              token_name = "Steel Shoes";
+            | False =>
+              match is_4_18 with
+              | True =>(* This case is Intermediate Archer Bow*)
+                token_name = "Intermediate Archer Bow";
+              | False =>
+                match is_5_18 with
+                | True =>(* This case is Light Huntsman Helmet*)
+                  token_name = "Light Huntsman Helmet";
+                | False =>
+                  match is_6_18 with
+                  | True =>(* This case is Light Huntsman Armor*)
+                    token_name = "Light Huntsman Armor";
+                  | False =>
+                    match is_7_18 with
+                    | True => (* This case is Light Huntsman Boots*)
+                      token_name = "Light Huntsman Boots";
+                    | False =>
+                      match is_8_18 with
+                      | True => (* This case is Enchanted Wand*)
+                        token_name = "Enchanted Wand";
+                      | False =>
+                        match is_9_18 with
+                        | True => (*Enchanted Silk Cap*)
+                          token_name = "Enchanted Silk Cap";
+                        | False =>
+                          match is_10_18 with
+                          | True => (* This case is Enchanted Silk Robe*)
+                            token_name = "Enchanted Silk Robe";
+                          | False =>
+                            match is_11_18 with
+                            | True =>(* This case is Enchanted Silk Shoes*)
+                              token_name = "Enchanted Silk Shoes";
+                            | False =>
+                              match is_12_18 with
+                              | True =>(* This case is Steel Kusarigama*)
+                                token_name = "Steel Kusarigama";
+                              | False =>
+                                match is_13_18 with
+                                | True =>(* This case is Black Soft Beanie*)
+                                  token_name = "Black Soft Beanie";
+                                | False =>
+                                  match is_14_18 with
+                                  | True => (* This case is Black Soft Hoodie*)
+                                    token_name = "Black Soft Hoodie";
+                                  | False =>
+                                    match is_15_18 with
+                                    | True => (* This case is Black Soft Shoes*)
+                                      token_name = "Black Soft Shoes";
+                                    | False =>
+                                      match is_16_18 with
+                                      | True => (* This case is Silver Ring*)
+                                        token_name = "Silver Ring";
+                                      | False => (* This case is *)
+                                        token_name = "Silver Necklace"
+                                      end
+                                    end
+                                  end
+                                end
+                              end
+                            end
+                          end
+                        end
+                      end
+                    end
+                  end
+                end
+              end
+            end
           end
         end
       end
+    | False =>
+      match is_less_than_98 with
+      | True => (* This case is 4**)
+        token_level = "4*";
+        match is_0_18 with
+        | True => (* This case is Crimson Sword*)
+          token_name = "Crimson Sword*";
+          token_trait = HeroesTrait token_name token_level;
+          token_traits[token_id] := token_trait
+        | False =>
+          match is_1_18 with
+          | True => (* This case is Golden Helmet*)
+            token_name = "Golden Helmet";
+          | False =>
+            match is_2_18 with
+            | True =>(* This case is Golden Armor*)
+              token_name = "Golden Armor";
+            | False =>
+              match is_3_18 with
+              | True => (* This case is Golden Shoes*)
+                token_name = "Golden Shoes";
+              | False =>
+                match is_4_18 with
+                | True =>(* This case is Crimson Crossbow*)
+                  token_name = "Crimson Crossbow";
+                | False =>
+                  match is_5_18 with
+                  | True =>(* This case is Hardened Leather Helmet*)
+                    token_name = "Hardened Leather Helmet";
+                  | False =>
+                    match is_6_18 with
+                    | True =>(* This case is Hardened Leather Armor*)
+                      token_name = "Hardened Leather Armor";
+                    | False =>
+                      match is_7_18 with
+                      | True => (* This case is Hardened Leather Shoes*)
+                        token_name = "Hardened Leather Shoes";
+                      | False =>
+                        match is_8_18 with
+                        | True => (* This case is Crimson Staff*)
+                          token_name = "Crimson Staff";
+                        | False =>
+                          match is_9_18 with
+                          | True => (*Hardened Silk Cap*)
+                            token_name = "Hardened Silk Cap";
+                          | False =>
+                            match is_10_18 with
+                            | True => (* This case is Hardened Silk Robe*)
+                              token_name = "Hardened Silk Robe";
+                            | False =>
+                              match is_11_18 with
+                              | True =>(* This case is Hardened Silk Shoes*)
+                                token_name = "Hardened Silk Shoes";
+                              | False =>
+                                match is_12_18 with
+                                | True =>(* This case is Dual Kusarigama*)
+                                  token_name = "Dual Kusarigama";
+                                | False =>
+                                  match is_13_18 with
+                                  | True =>(* This case is Enchanted Headband*)
+                                    token_name = "Enchanted Headband";
+                                  | False =>
+                                    match is_14_18 with
+                                    | True => (* This case is Enchanted Light Sweater*)
+                                      token_name = "Enchanted Light Sweater";
+                                    | False =>
+                                      match is_15_18 with
+                                      | True => (* This case is Enchanted Light Sneakers*)
+                                        token_name = "Enchanted Light Sneakers";
+                                      | False =>
+                                        match is_16_18 with
+                                        | True => (* This case is Gold Ring*)
+                                          token_name = "Gold Ring";
+                                        | False => (* This case is Gold Necklace*)
+                                          token_name = "Gold Necklace"
+                                        end
+                                      end
+                                    end
+                                  end
+                                end
+                              end
+                            end
+                          end
+                        end
+                      end
+                    end
+                  end
+                end
+              end
+            end
+          end
+        end
+      | False => (* This case is 5**)
+        token_level = "5*";
+        match is_0_18 with
+        | True => (* This case is Lowhelm’s Infinite Sword*)
+          token_name = "Lowhelm’s Infinite Sword*";
+          token_trait = HeroesTrait token_name token_level;
+          token_traits[token_id] := token_trait
+        | False =>
+          match is_1_18 with
+          | True => (* This case is Lowhelm’s King Helmet*)
+            token_name = "Lowhelm’s King Helmet";
+          | False =>
+            match is_2_18 with
+            | True =>(* This case is Lowhelm’s King Armor*)
+              token_name = "Lowhelm’s King Armor";
+            | False =>
+              match is_3_18 with
+              | True => (* This case is Lowhelm’s King Shoes*)
+                token_name = "Lowhelm’s King Shoes";
+              | False =>
+                match is_4_18 with
+                | True =>(* This case is Lowhelm’s Mythical Bow*)
+                  token_name = "Lowhelm’s Mythical Bow";
+                | False =>
+                  match is_5_18 with
+                  | True =>(* This case is Lowhelm’s King Hunting Hat*)
+                    token_name = "Lowhelm’s King Hunting Hat";
+                  | False =>
+                    match is_6_18 with
+                    | True =>(* This case is Lowhelm’s King Hunting Suit*)
+                      token_name = "Lowhelm’s King Hunting Suit";
+                    | False =>
+                      match is_7_18 with
+                      | True => (* This case is Lowhelm’s King Hunting Shoes*)
+                        token_name = "Lowhelm’s King Hunting Shoes";
+                      | False =>
+                        match is_8_18 with
+                        | True => (* This case is Lowhelm’s Superior Staff*)
+                          token_name = "Lowhelm’s Superior Staff";
+                        | False =>
+                          match is_9_18 with
+                          | True => (*Lowhelm’s King Wizard Hat*)
+                            token_name = "Lowhelm’s King Wizard Hat";
+                          | False =>
+                            match is_10_18 with
+                            | True => (* This case is Lowhelm’s King Robe*)
+                              token_name = "Lowhelm’s King Robe";
+                            | False =>
+                              match is_11_18 with
+                              | True =>(* This case is Lowhelm’s King Silk Shoes*)
+                                token_name = "Lowhelm’s King Silk Shoes";
+                              | False =>
+                                match is_12_18 with
+                                | True =>(* This case is Lowhelm’s Dagger of Fatality*)
+                                  token_name = "Lowhelm’s Dagger of Fatality";
+                                | False =>
+                                  match is_13_18 with
+                                  | True =>(* This case is Lowhelm’s King Headband*)
+                                    token_name = "Lowhelm’s King Headband";
+                                  | False =>
+                                    match is_14_18 with
+                                    | True => (* This case is Lowhelm’s King Ninja Suit*)
+                                      token_name = "Lowhelm’s King Ninja Suit";
+                                    | False =>
+                                      match is_15_18 with
+                                      | True => (* This case is Lowhelm’s King Ninja Shoes*)
+                                        token_name = "Lowhelm’s King Ninja Shoes";
+                                      | False =>
+                                        match is_16_18 with
+                                        | True => (* This case is Lowhelm’s King Ring*)
+                                          token_name = "Lowhelm’s King Ring";
+                                        | False => (* This case is Lowhelm’s King Necklace*)
+                                          token_name = "Lowhelm’s King Necklace"
+                                        end
+                                      end
+                                    end
+                                  end
+                                end
+                              end
+                            end
+                          end
+                        end
+                      end
+                    end
+                  end
+                end
+              end
+            end
+          end
+        end
     end
+  | False => (* This case is 1* ~ 3* Gear Summons*)
   end
 end
 
@@ -749,9 +959,9 @@ end
 (* @param: seed - random seed which will be used to determine token traits *)
 (* @Requirements: *)
 (* - The contract must not be paused. Otherwise, it must throw `PausedError` *)
-transition Mint(to: ByStr20, token_uri: String, seed: Uint256)
+transition Mint(to: ByStr20, token_uri: String, seed: Uint256, is_high_level: Bool)
   RequireNotPaused;
-  MintToken to seed;
+  MintToken to seed is_high_level;
   token_id <- token_id_count;
   SetTokenURI token_id token_uri;
 
