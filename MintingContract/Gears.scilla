@@ -209,6 +209,30 @@ let cons_five_substat =
     let l1 = cons_four_substat param1 param2 param3 param4
       Cons {String} param5 l1
 
+let get_token_trait_lv2 = 
+  fun (gear_type: GearType) =>
+  fun (seed: Uint256) =>
+  fun (token_name: String) =>
+    let token_level = "2*" in
+    let gear_level = Level2 in
+    let mainstat = get_mainstat gear_type seed in
+    let seed1 = builtin div seed hundred in
+    let substat1 = get_substat gear_type seed1 gear_level in
+    (* CHAOTIC*)
+    let seed2 = builtin div seed1 hundred in
+    let chao_rest_hundred = builtin rem seed2 hundred in
+    let chao_is_true = builtin eq chao_rest_hundred zero in
+    match chao_is_true with
+    | True =>
+      let seed3 = builtin dev seed2 hundred in
+      let substat2 = get_substat gear_type seed3 gear_level in
+      let substats = cons_two_substat substat1 substat2 in
+      HeroesTrait token_name token_level mainstat substats
+    | False =>
+      let substats = cons_one_substat substat1 in
+      HeroesTrait token_name token_level mainstat substats
+    end
+
 let get_token_trait_lv3 = 
   fun (gear_type: GearType) =>
   fun (seed: Uint256) =>
