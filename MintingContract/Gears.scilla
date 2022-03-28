@@ -41,13 +41,16 @@ let fourteen = Uint256 14
 let fifteen = Uint256 15
 let sixteen = Uint256 16
 let eighteen = Uint256 18
+let twenty = Uint256 20
 let hundred = Uint256 100
 let eighty = Uint256 80
+let eighty_six = Uint256 86
 let seventy = Uint256 70
 let ninety_five = Uint256 95
 let ninety_eight = Uint256 98
-
+let hundred_thirty_one = Uint256 131
 let empty_string = ""
+let pro = "%"
 
 let add_operation = Add
 let sub_operation = Sub
@@ -116,10 +119,10 @@ type  SubstatType =
   | DEF
   | DEFP
   | HP
-  | HP%
+  | HPP
   | SPD
-  | CRIT.DMGP
-  | CRIT.RATEP
+  | CRIT_DMGP
+  | CRIT_RATEP
   | ACCP
   | RESP
 
@@ -638,11 +641,65 @@ let get_substat =
       end
     end
 
-
+let get_formatted_substat = 
+  fun (seed: Uint256) =>
+  fun (range_num: Uint256) =>
+  fun (default_num: Uint256) =>
+  fun (is_pro: Bool) =>
+  fun (substat_type: String) =>
+    match is_pro with
+    | True =>
+      let rand_num = builtin rem seed range_num in
+      let substat_num = builtin add rand_num default_num in
+      let substat_num_string = builtin to_string substat_num in
+      let substat_num_string_pro = builtin concat substat_num_string pro in
+      builtin concat substat_type substat_num_string_pro
+    | False =>
+      let rand_num = builtin rem seed range_num in
+      let substat_num = builtin add rand_num default_num in
+      let substat_num_string = builtin to_string substat_num in
+      builtin concat substat_type substat_num_string
+    end
 let get_substat_number = 
-  fun (lv: GearLevelType)
-  fun (substat_spec: SubstatType)
-  fun (seed: Uint256)
+  fun (lv: GearLevelType) =>
+  fun (substat_spec: SubstatType) =>
+  fun (seed: Uint256) =>
+    let result = 
+    match lv with
+    | Level3 =>
+      match substat_spec with
+      | ATK => 
+        let substat_type = "ATK " in
+        let rand_num = builtin rem seed eighty_six in
+        let substat_num = builtin add rand_num fifteen in (* 15 ~ 100*)
+        let substat_num_string = builtin to_string substat_num in
+        builtin concat substat_type substat_num_string
+      | ATKP
+        let substat_type = "ATK " in
+        let rand_num = builtin rem seed five in
+        let substat_num = builtin add rand_num two in (* 2 ~ 6*)
+        let substat_num_string = builtin to_string substat_num in
+        let substat_num_string_pro = builtin concat substat_num_string pro in
+        builtin concat substat_type substat_num_string_pro
+      | DEF
+        let substat_type = "DEF" in
+        let rand_num = builtin rem seed eighty_six in
+        let substat_num = builtin add rand_num fifteen in (* 15 ~ 100*)
+        let substat_num_string = builtin to_string substat_num in
+        builtin concat substat_type substat_num_string
+      | DEFP
+      | HP
+      | HPP
+      | SPD
+      | CRIT_DMGP
+      | CRIT_RATEP
+      | ACCP
+      | RESP
+      end
+    | Level4 =>
+    | Level5 =>
+    | _ =>
+    end
 
 (***************************************************)
 (*             The contract definition             *)
