@@ -208,12 +208,12 @@ Spends $HOL
 - Vampire Set (+20% Life-Steal)(Req:4 Pieces)
 
 ### CHAOTIC Equipment Trait:
-0.25% chance for ANY gear to have CHAOTIC TRAIT which adds 1 more random substat to the gear
+1% chance for ANY gear to have CHAOTIC TRAIT which adds 1 more random substat to the gear
 
 ### Equipment Traits Notes
 Each equipment has following traits:
 1) 1 or more random Substat depending on natural star grade level
-2) 0.25% chance for gear to have CHAOTIC TRAIT which adds 1 more random substat to the gear
+2) 1% chance for gear to have CHAOTIC TRAIT which adds 1 more random substat to the gear
 3) if item is 5* then it also has a random SET BONUS trait
 
 Each Equipment also has the following information: Main Stat (not random) and this main stat data is fetched from the game server as it is dynamic based on item level.
