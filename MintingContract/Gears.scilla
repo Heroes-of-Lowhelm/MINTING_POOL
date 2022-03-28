@@ -44,6 +44,7 @@ let eighteen = Uint256 18
 let twenty = Uint256 20
 let thirty = Uint256 30
 let fourty = Uint256 40
+let fifty = Uint256 50
 let hundred = Uint256 100
 let eighty = Uint256 80
 let eighty_six = Uint256 86
@@ -53,6 +54,8 @@ let ninety_eight = Uint256 98
 let hundred_thirty_one = Uint256 131
 let hundred_twenty_one = Uint256 121
 let hundred_sixty_one = Uint256 161
+let hundred_seventy_one = Uint256 171
+let two_hundred_one = Uint256 201
 let empty_string = ""
 let pro = "%"
 
@@ -746,37 +749,37 @@ let get_substat_number =
       match substat_spec with
       | ATK => 
         let substat_type = "ATK " in
-        get_formatted_substat seed hundred_thirty_one twenty false substat_type
+        get_formatted_substat seed hundred_seventy_one thirty false substat_type
       | ATKP
         let substat_type = "ATK " in
-        get_formatted_substat seed six three true substat_type
+        get_formatted_substat seed seven four true substat_type
       | DEF
         let substat_type = "DEF " in
-        get_formatted_substat seed hundred_thirty_one twenty false substat_type
+        get_formatted_substat seed hundred_seventy_one thirty false substat_type
       | DEFP
         let substat_type = "DEF " in
-        get_formatted_substat seed six three true substat_type
+        get_formatted_substat seed seven four true substat_type
       | HP
         let substat_type = "HP " in
-        get_formatted_substat seed hundred_sixty_one fourty false substat_type
+        get_formatted_substat seed two_hundred_one fifty false substat_type
       | HPP
         let substat_type = "HP " in
-        get_formatted_substat seed six three true substat_type
+        get_formatted_substat seed seven four true substat_type
       | SPD
         let substat_type = "SPD " in
-        get_formatted_substat seed five one false substat_type
+        get_formatted_substat seed five two false substat_type
       | CRIT_DMGP
         let substat_type = "CRIT.DMG " in
-        get_formatted_substat seed five three true substat_type
+        get_formatted_substat seed five four true substat_type
       | CRIT_RATEP
         let substat_type = "CRIT.RATE " in
-        get_formatted_substat seed four three true substat_type
+        get_formatted_substat seed five three true substat_type
       | ACCP
         let substat_type = "ACC " in
-        get_formatted_substat seed six three true substat_type
+        get_formatted_substat seed seven four true substat_type
       | RESP
         let substat_type = "RES " in
-        get_formatted_substat seed six three true substat_type
+        get_formatted_substat seed seven four true substat_type
       end
     | _ =>
     end
