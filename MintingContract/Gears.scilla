@@ -265,7 +265,7 @@ let get_token_trait_lv4 =
       HeroesTrait token_name token_level mainstat substats
     end
 
-    
+
 let get_mainstat = 
   fun (gear_type: GearType) =>
   fun (seed: Uint256) =>
@@ -1373,78 +1373,129 @@ procedure MintToken(to: ByStr20, seed: Uint256, is_high_level: Bool)
     | False =>
       match is_less_than_98 with
       | True => (* This case is 4**)
-        token_level = "4*";
         match is_0_18 with
         | True => (* This case is Crimson Sword*)
           token_name = "Crimson Sword*";
-          token_trait = HeroesTrait token_name token_level;
+          gear_type = Weapon;
+          token_trait = get_token_trait_lv4 gear_type seed token_name;
           token_traits[token_id] := token_trait
         | False =>
           match is_1_18 with
           | True => (* This case is Golden Helmet*)
             token_name = "Golden Helmet";
+            gear_type = Helmet;
+            token_trait = get_token_trait_lv4 gear_type seed token_name;
+            token_traits[token_id] := token_trait
           | False =>
             match is_2_18 with
             | True =>(* This case is Golden Armor*)
               token_name = "Golden Armor";
+              gear_type = Armor;
+              token_trait = get_token_trait_lv4 gear_type seed token_name;
+              token_traits[token_id] := token_trait
             | False =>
               match is_3_18 with
               | True => (* This case is Golden Shoes*)
                 token_name = "Golden Shoes";
+                gear_type = Shoes;
+                token_trait = get_token_trait_lv4 gear_type seed token_name;
+                token_traits[token_id] := token_trait
               | False =>
                 match is_4_18 with
                 | True =>(* This case is Crimson Crossbow*)
                   token_name = "Crimson Crossbow";
+                  gear_type = Weapon;
+                  token_trait = get_token_trait_lv4 gear_type seed token_name;
+                  token_traits[token_id] := token_trait
                 | False =>
                   match is_5_18 with
                   | True =>(* This case is Hardened Leather Helmet*)
                     token_name = "Hardened Leather Helmet";
+                    gear_type = Helmet;
+                    token_trait = get_token_trait_lv4 gear_type seed token_name;
+                    token_traits[token_id] := token_trait
                   | False =>
                     match is_6_18 with
                     | True =>(* This case is Hardened Leather Armor*)
                       token_name = "Hardened Leather Armor";
+                      gear_type = Armor;
+                      token_trait = get_token_trait_lv4 gear_type seed token_name;
+                      token_traits[token_id] := token_trait
                     | False =>
                       match is_7_18 with
                       | True => (* This case is Hardened Leather Shoes*)
                         token_name = "Hardened Leather Shoes";
+                        gear_type = Shoes;
+                        token_trait = get_token_trait_lv4 gear_type seed token_name;
+                        token_traits[token_id] := token_trait
                       | False =>
                         match is_8_18 with
                         | True => (* This case is Crimson Staff*)
                           token_name = "Crimson Staff";
+                          gear_type = Weapon;
+                          token_trait = get_token_trait_lv4 gear_type seed token_name;
+                          token_traits[token_id] := token_trait
                         | False =>
                           match is_9_18 with
                           | True => (*Hardened Silk Cap*)
                             token_name = "Hardened Silk Cap";
+                            gear_type = Helmet;
+                            token_trait = get_token_trait_lv4 gear_type seed token_name;
+                            token_traits[token_id] := token_trait
                           | False =>
                             match is_10_18 with
                             | True => (* This case is Hardened Silk Robe*)
                               token_name = "Hardened Silk Robe";
+                              gear_type = Armor;
+                              token_trait = get_token_trait_lv4 gear_type seed token_name;
+                              token_traits[token_id] := token_trait
                             | False =>
                               match is_11_18 with
                               | True =>(* This case is Hardened Silk Shoes*)
                                 token_name = "Hardened Silk Shoes";
+                                gear_type = Shoes;
+                                token_trait = get_token_trait_lv4 gear_type seed token_name;
+                                token_traits[token_id] := token_trait
                               | False =>
                                 match is_12_18 with
                                 | True =>(* This case is Dual Kusarigama*)
                                   token_name = "Dual Kusarigama";
+                                  gear_type = Weapon;
+                                  token_trait = get_token_trait_lv4 gear_type seed token_name;
+                                  token_traits[token_id] := token_trait
                                 | False =>
                                   match is_13_18 with
                                   | True =>(* This case is Enchanted Headband*)
                                     token_name = "Enchanted Headband";
+                                    gear_type = Helmet;
+                                    token_trait = get_token_trait_lv4 gear_type seed token_name;
+                                    token_traits[token_id] := token_trait
                                   | False =>
                                     match is_14_18 with
                                     | True => (* This case is Enchanted Light Sweater*)
                                       token_name = "Enchanted Light Sweater";
+                                      gear_type = Armor;
+                                      token_trait = get_token_trait_lv4 gear_type seed token_name;
+                                      token_traits[token_id] := token_trait
                                     | False =>
                                       match is_15_18 with
                                       | True => (* This case is Enchanted Light Sneakers*)
                                         token_name = "Enchanted Light Sneakers";
+                                        gear_type = Shoes;
+                                        token_trait = get_token_trait_lv4 gear_type seed token_name;
+                                        token_traits[token_id] := token_trait
                                       | False =>
                                         match is_16_18 with
                                         | True => (* This case is Gold Ring*)
                                           token_name = "Gold Ring";
+                                          gear_type = Ring;
+                                          token_trait = get_token_trait_lv4 gear_type seed token_name;
+                                          token_traits[token_id] := token_trait
                                         | False => (* This case is Gold Necklace*)
                                           token_name = "Gold Necklace"
+                                          gear_type = Neclace;
+                                          token_trait = get_token_trait_lv4 gear_type seed token_name;
+                                          token_traits[token_id] := token_trait
                                         end
                                       end
                                     end
