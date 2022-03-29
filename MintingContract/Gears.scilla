@@ -719,20 +719,20 @@ let get_substat =
             | False =>
               match is_four_eight with
               | True =>
-                let substat_spec = CRIT.RATEP in
+                let substat_spec = CRIT_RATEP in
                 get_substat_number lv substat_spec seed
               | False =>
                 match is_five_eight with
                 | True =>
-                  let substat_spec = CRIT.DMGP in
+                  let substat_spec = CRIT_DMGP in
                   get_substat_number lv substat_spec seed
                 | False =>
                   match is_six_eight with
                   | True =>
-                    let substat_spec = ACC in
+                    let substat_spec = ACCP in
                     get_substat_number lv substat_spec seed
                   | False =>
-                    let substat_spec = RES in
+                    let substat_spec = RESP in
                     get_substat_number lv substat_spec seed
                   end
                 end
@@ -779,12 +779,12 @@ let get_substat =
                   | False =>
                     match is_seven_eleven with
                     | True =>
-                      let substat_spec = CRIT.RATEP in
+                      let substat_spec = CRIT_RATEP in
                       get_substat_number lv substat_spec seed
                     | False =>
                       match is_eight_eleven with
                       | True =>
-                        let substat_spec = CRIT.DMGP in
+                        let substat_spec = CRIT_DMGP in
                         get_substat_number lv substat_spec seed
                       | False =>
                         match is_nine_eleven with
@@ -802,6 +802,7 @@ let get_substat =
               end
             end
           end
+        end
       end
     | Armor =>
       match is_zero_eight with
@@ -826,20 +827,20 @@ let get_substat =
             | False =>
               match is_four_eight with
               | True =>
-                let substat_spec = CRIT.RATEP in
+                let substat_spec = CRIT_RATEP in
                 get_substat_number lv substat_spec seed
               | False =>
                 match is_five_eight with
                 | True =>
-                  let substat_spec = CRIT.DMGP in
+                  let substat_spec = CRIT_DMGP in
                   get_substat_number lv substat_spec seed
                 | False =>
                   match is_six_eight with
                   | True =>
-                    let substat_spec = ACC in
+                    let substat_spec = ACCP in
                     get_substat_number lv substat_spec seed
                   | False =>
-                    let substat_spec = RES in
+                    let substat_spec = RESP in
                     get_substat_number lv substat_spec seed
                   end
                 end
@@ -886,12 +887,12 @@ let get_substat =
                   | False =>
                     match is_seven_eleven with
                     | True =>
-                      let substat_spec = CRIT.RATEP in
+                      let substat_spec = CRIT_RATEP in
                       get_substat_number lv substat_spec seed
                     | False =>
                       match is_eight_eleven with
                       | True =>
-                        let substat_spec = CRIT.DMGP in
+                        let substat_spec = CRIT_DMGP in
                         get_substat_number lv substat_spec seed
                       | False =>
                         match is_nine_eleven with
@@ -909,6 +910,7 @@ let get_substat =
               end
             end
           end
+        end
       end
     | Neclace =>
       match is_zero_eleven with
@@ -948,12 +950,12 @@ let get_substat =
                   | False =>
                     match is_seven_eleven with
                     | True =>
-                      let substat_spec = CRIT.RATEP in
+                      let substat_spec = CRIT_RATEP in
                       get_substat_number lv substat_spec seed
                     | False =>
                       match is_eight_eleven with
                       | True =>
-                        let substat_spec = CRIT.DMGP in
+                        let substat_spec = CRIT_DMGP in
                         get_substat_number lv substat_spec seed
                       | False =>
                         match is_nine_eleven with
@@ -971,6 +973,7 @@ let get_substat =
               end
             end
           end
+        end
       end
     | Ring =>
       match is_zero_eleven with
@@ -1010,12 +1013,12 @@ let get_substat =
                   | False =>
                     match is_seven_eleven with
                     | True =>
-                      let substat_spec = CRIT.RATEP in
+                      let substat_spec = CRIT_RATEP in
                       get_substat_number lv substat_spec seed
                     | False =>
                       match is_eight_eleven with
                       | True =>
-                        let substat_spec = CRIT.DMGP in
+                        let substat_spec = CRIT_DMGP in
                         get_substat_number lv substat_spec seed
                       | False =>
                         match is_nine_eleven with
@@ -1033,6 +1036,7 @@ let get_substat =
               end
             end
           end
+        end
       end
     end
 
