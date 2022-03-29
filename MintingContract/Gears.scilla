@@ -234,7 +234,7 @@ let get_token_trait_lv1 =
     let chao_is_true = builtin eq chao_rest_hundred zero in
     match chao_is_true with
     | True =>
-      let seed2 = builtin dev seed1 hundred in
+      let seed2 = builtin div seed1 hundred in
       let substat1 = get_substat gear_type seed2 gear_level in
       let substats = cons_one_substat substat1 in
       HeroesTrait token_name token_level mainstat substats
@@ -258,7 +258,7 @@ let get_token_trait_lv2 =
     let chao_is_true = builtin eq chao_rest_hundred zero in
     match chao_is_true with
     | True =>
-      let seed3 = builtin dev seed2 hundred in
+      let seed3 = builtin div seed2 hundred in
       let substat2 = get_substat gear_type seed3 gear_level in
       let substats = cons_two_substat substat1 substat2 in
       HeroesTrait token_name token_level mainstat substats
@@ -284,7 +284,7 @@ let get_token_trait_lv3 =
     let chao_is_true = builtin eq chao_rest_hundred zero in
     match chao_is_true with
     | True =>
-      let seed4 = builtin dev seed3 hundred in
+      let seed4 = builtin div seed3 hundred in
       let substat3 = get_substat gear_type seed4 gear_level in
       let substats = cons_three_substat substat1 substat2 substat3 in
       HeroesTrait token_name token_level mainstat substats
@@ -314,7 +314,7 @@ let get_token_trait_lv4 =
     let chao_is_true = builtin eq chao_rest_hundred zero in
     match chao_is_true with
     | True =>
-      let seed5 = builtin dev seed4 hundred in
+      let seed5 = builtin div seed4 hundred in
       let substat4 = get_substat gear_type seed5 gear_level in
       let substats = cons_four_substat substat1 substat2 substat3 substat4 in
       HeroesTrait token_name token_level mainstat substats
@@ -325,7 +325,7 @@ let get_token_trait_lv4 =
 
 
 let get_bonus_trait = 
-  fun  (seed) =>
+  fun (seed) =>
     let rest_seven = builtin rem seed seven in
     let is_zero = builtin eq rest_seven zero in
     let is_one = builtin eq rest_seven one in
@@ -381,7 +381,7 @@ let get_token_trait_lv5 =
     let chao_is_true = builtin eq chao_rest_hundred zero in
     match chao_is_true with
     | True =>
-      let seed7 = builtin dev seed6 hundred in
+      let seed7 = builtin div seed6 hundred in
       let substat5 = get_substat gear_type seed7 gear_level in
       let substats = cons_six_substat substat1 substat2 substat3 substat4 substat5 bonusstatin
       HeroesTrait token_name token_level mainstat substats
