@@ -312,7 +312,37 @@ let get_token_trait_lv4 =
       HeroesTrait token_name token_level mainstat substats
     end
 
+let get_token_trait_lv5 = 
+  fun (gear_type: GearType) =>
+  fun (seed: Uint256) =>
+  fun (token_name: String) =>
+    let token_level = "5*" in
+    let gear_level = Level5 in
+    let mainstat = get_mainstat gear_type seed in
+    let seed1 = builtin div seed hundred in
+    let substat1 = get_substat gear_type seed1 gear_level in
+    let seed2 = builtin div seed1 hundred in
+    let substat2 = get_substat gear_type seed2 gear_level in
+    let seed3 = builtin div seed2 hundred in
+    let substat3 = get_substat gear_type seed3 gear_level in
+    let seed4 = builtin div seed3 hundred in
+    let substat4 = get_substat gear_type seed4 gear_level in
 
+    (* CHAOTIC*)
+    let seed5 = builtin div seed4 hundred in
+    let chao_rest_hundred = builtin rem seed5 hundred in
+    let chao_is_true = builtin eq chao_rest_hundred zero in
+    match chao_is_true with
+    | True =>
+      let seed6 = builtin dev seed5 hundred in
+      let substat5 = get_substat gear_type seed6 gear_level in
+      let substats = cons_five_substat substat1 substat2 substat3 substat4 substat5 in
+      HeroesTrait token_name token_level mainstat substats
+    | False =>
+      let substats = cons_four_substat substat1 substat2 substat3 substat4 in
+      HeroesTrait token_name token_level mainstat substats
+    end
+     
 let get_mainstat = 
   fun (gear_type: GearType) =>
   fun (seed: Uint256) =>
