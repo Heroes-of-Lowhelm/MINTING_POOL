@@ -393,7 +393,6 @@ let get_token_trait_lv5 =
 let get_mainstat = 
   fun (gear_type: GearType) =>
   fun (seed: Uint256) =>
-    let mainstat = 
     let restSeven = builtin rem seed seven in
     let is_zero_seven = builtin eq restSeven zero in
     let is_one_seven = builtin eq restSeven one in
@@ -496,6 +495,178 @@ let get_mainstat =
           end
         end
       end
+    end
+
+
+let get_formatted_substat = 
+  fun (seed: Uint256) =>
+  fun (range_num: Uint256) =>
+  fun (default_num: Uint256) =>
+  fun (is_pro: Bool) =>
+  fun (substat_type: String) =>
+    match is_pro with
+    | True =>
+      let rand_num = builtin rem seed range_num in
+      let substat_num = builtin add rand_num default_num in
+      let substat_num_string = builtin to_string substat_num in
+      let substat_num_string_pro = builtin concat substat_num_string pro in
+      builtin concat substat_type substat_num_string_pro
+    | False =>
+      let rand_num = builtin rem seed range_num in
+      let substat_num = builtin add rand_num default_num in
+      let substat_num_string = builtin to_string substat_num in
+      builtin concat substat_type substat_num_string
+    end
+    
+let get_substat_number = 
+  fun (lv: GearLevelType) =>
+  fun (substat_spec: SubstatType) =>
+  fun (seed: Uint256) =>
+    let result = 
+    match lv with
+    | Level3 =>
+      match substat_spec with
+      | ATK => 
+        let substat_type = "ATK " in
+        get_formatted_substat seed eighty_six fifteen false substat_type
+      | ATKP
+        let substat_type = "ATK " in
+        get_formatted_substat seed five two true substat_type
+      | DEF
+        let substat_type = "DEF " in
+        get_formatted_substat seed eighty_six fifteen false substat_type
+      | DEFP
+        let substat_type = "DEF " in
+        get_formatted_substat seed five two true substat_type
+      | HP
+        let substat_type = "HP " in
+        get_formatted_substat seed hundred_twenty_one thirty false substat_type
+      | HPP
+        let substat_type = "HP " in
+        get_formatted_substat seed five two true substat_type
+      | SPD
+        let substat_type = "SPD " in
+        get_formatted_substat seed four one false substat_type
+      | CRIT_DMGP
+        let substat_type = "CRIT.DMG " in
+        get_formatted_substat seed four three true substat_type
+      | CRIT_RATEP
+        let substat_type = "CRIT.RATE " in
+        get_formatted_substat seed four two true substat_type
+      | ACCP
+        let substat_type = "ACC " in
+        get_formatted_substat seed five two true substat_type
+      | RESP
+        let substat_type = "RES " in
+        get_formatted_substat seed five two true substat_type
+      end
+    | Level4 =>
+      match substat_spec with
+      | ATK => 
+        let substat_type = "ATK " in
+        get_formatted_substat seed hundred_thirty_one twenty false substat_type
+      | ATKP
+        let substat_type = "ATK " in
+        get_formatted_substat seed six three true substat_type
+      | DEF
+        let substat_type = "DEF " in
+        get_formatted_substat seed hundred_thirty_one twenty false substat_type
+      | DEFP
+        let substat_type = "DEF " in
+        get_formatted_substat seed six three true substat_type
+      | HP
+        let substat_type = "HP " in
+        get_formatted_substat seed hundred_sixty_one fourty false substat_type
+      | HPP
+        let substat_type = "HP " in
+        get_formatted_substat seed six three true substat_type
+      | SPD
+        let substat_type = "SPD " in
+        get_formatted_substat seed five one false substat_type
+      | CRIT_DMGP
+        let substat_type = "CRIT.DMG " in
+        get_formatted_substat seed five three true substat_type
+      | CRIT_RATEP
+        let substat_type = "CRIT.RATE " in
+        get_formatted_substat seed four three true substat_type
+      | ACCP
+        let substat_type = "ACC " in
+        get_formatted_substat seed six three true substat_type
+      | RESP
+        let substat_type = "RES " in
+        get_formatted_substat seed six three true substat_type
+      end
+    | Level5 =>
+      match substat_spec with
+      | ATK => 
+        let substat_type = "ATK " in
+        get_formatted_substat seed hundred_seventy_one thirty false substat_type
+      | ATKP
+        let substat_type = "ATK " in
+        get_formatted_substat seed seven four true substat_type
+      | DEF
+        let substat_type = "DEF " in
+        get_formatted_substat seed hundred_seventy_one thirty false substat_type
+      | DEFP
+        let substat_type = "DEF " in
+        get_formatted_substat seed seven four true substat_type
+      | HP
+        let substat_type = "HP " in
+        get_formatted_substat seed two_hundred_one fifty false substat_type
+      | HPP
+        let substat_type = "HP " in
+        get_formatted_substat seed seven four true substat_type
+      | SPD
+        let substat_type = "SPD " in
+        get_formatted_substat seed five two false substat_type
+      | CRIT_DMGP
+        let substat_type = "CRIT.DMG " in
+        get_formatted_substat seed five four true substat_type
+      | CRIT_RATEP
+        let substat_type = "CRIT.RATE " in
+        get_formatted_substat seed five three true substat_type
+      | ACCP
+        let substat_type = "ACC " in
+        get_formatted_substat seed seven four true substat_type
+      | RESP
+        let substat_type = "RES " in
+        get_formatted_substat seed seven four true substat_type
+      end
+    | _ =>
+      match substat_spec with
+        | ATK => 
+          let substat_type = "ATK " in
+          get_formatted_substat seed ninety_one ten false substat_type
+        | ATKP
+          let substat_type = "ATK " in
+          get_formatted_substat seed four one true substat_type
+        | DEF
+          let substat_type = "DEF " in
+          get_formatted_substat seed ninety_one ten false substat_type
+        | DEFP
+          let substat_type = "DEF " in
+          get_formatted_substat seed four one true substat_type
+        | HP
+          let substat_type = "HP " in
+          get_formatted_substat seed hundred_thirty_one twenty false substat_type
+        | HPP
+          let substat_type = "HP " in
+          get_formatted_substat seed four one true substat_type
+        | SPD
+          let substat_type = "SPD " in
+          get_formatted_substat seed three one false substat_type
+        | CRIT_DMGP
+          let substat_type = "CRIT.DMG " in
+          get_formatted_substat seed three three true substat_type
+        | CRIT_RATEP
+          let substat_type = "CRIT.RATE " in
+          get_formatted_substat seed three two true substat_type
+        | ACCP
+          let substat_type = "ACC " in
+          get_formatted_substat seed four one true substat_type
+        | RESP
+          let substat_type = "RES " in
+          get_formatted_substat seed four one true substat_type
     end
 
 
@@ -866,175 +1037,7 @@ let get_substat =
       end
     end
 
-let get_formatted_substat = 
-  fun (seed: Uint256) =>
-  fun (range_num: Uint256) =>
-  fun (default_num: Uint256) =>
-  fun (is_pro: Bool) =>
-  fun (substat_type: String) =>
-    match is_pro with
-    | True =>
-      let rand_num = builtin rem seed range_num in
-      let substat_num = builtin add rand_num default_num in
-      let substat_num_string = builtin to_string substat_num in
-      let substat_num_string_pro = builtin concat substat_num_string pro in
-      builtin concat substat_type substat_num_string_pro
-    | False =>
-      let rand_num = builtin rem seed range_num in
-      let substat_num = builtin add rand_num default_num in
-      let substat_num_string = builtin to_string substat_num in
-      builtin concat substat_type substat_num_string
-    end
-let get_substat_number = 
-  fun (lv: GearLevelType) =>
-  fun (substat_spec: SubstatType) =>
-  fun (seed: Uint256) =>
-    let result = 
-    match lv with
-    | Level3 =>
-      match substat_spec with
-      | ATK => 
-        let substat_type = "ATK " in
-        get_formatted_substat seed eighty_six fifteen false substat_type
-      | ATKP
-        let substat_type = "ATK " in
-        get_formatted_substat seed five two true substat_type
-      | DEF
-        let substat_type = "DEF " in
-        get_formatted_substat seed eighty_six fifteen false substat_type
-      | DEFP
-        let substat_type = "DEF " in
-        get_formatted_substat seed five two true substat_type
-      | HP
-        let substat_type = "HP " in
-        get_formatted_substat seed hundred_twenty_one thirty false substat_type
-      | HPP
-        let substat_type = "HP " in
-        get_formatted_substat seed five two true substat_type
-      | SPD
-        let substat_type = "SPD " in
-        get_formatted_substat seed four one false substat_type
-      | CRIT_DMGP
-        let substat_type = "CRIT.DMG " in
-        get_formatted_substat seed four three true substat_type
-      | CRIT_RATEP
-        let substat_type = "CRIT.RATE " in
-        get_formatted_substat seed four two true substat_type
-      | ACCP
-        let substat_type = "ACC " in
-        get_formatted_substat seed five two true substat_type
-      | RESP
-        let substat_type = "RES " in
-        get_formatted_substat seed five two true substat_type
-      end
-    | Level4 =>
-      match substat_spec with
-      | ATK => 
-        let substat_type = "ATK " in
-        get_formatted_substat seed hundred_thirty_one twenty false substat_type
-      | ATKP
-        let substat_type = "ATK " in
-        get_formatted_substat seed six three true substat_type
-      | DEF
-        let substat_type = "DEF " in
-        get_formatted_substat seed hundred_thirty_one twenty false substat_type
-      | DEFP
-        let substat_type = "DEF " in
-        get_formatted_substat seed six three true substat_type
-      | HP
-        let substat_type = "HP " in
-        get_formatted_substat seed hundred_sixty_one fourty false substat_type
-      | HPP
-        let substat_type = "HP " in
-        get_formatted_substat seed six three true substat_type
-      | SPD
-        let substat_type = "SPD " in
-        get_formatted_substat seed five one false substat_type
-      | CRIT_DMGP
-        let substat_type = "CRIT.DMG " in
-        get_formatted_substat seed five three true substat_type
-      | CRIT_RATEP
-        let substat_type = "CRIT.RATE " in
-        get_formatted_substat seed four three true substat_type
-      | ACCP
-        let substat_type = "ACC " in
-        get_formatted_substat seed six three true substat_type
-      | RESP
-        let substat_type = "RES " in
-        get_formatted_substat seed six three true substat_type
-      end
-    | Level5 =>
-      match substat_spec with
-      | ATK => 
-        let substat_type = "ATK " in
-        get_formatted_substat seed hundred_seventy_one thirty false substat_type
-      | ATKP
-        let substat_type = "ATK " in
-        get_formatted_substat seed seven four true substat_type
-      | DEF
-        let substat_type = "DEF " in
-        get_formatted_substat seed hundred_seventy_one thirty false substat_type
-      | DEFP
-        let substat_type = "DEF " in
-        get_formatted_substat seed seven four true substat_type
-      | HP
-        let substat_type = "HP " in
-        get_formatted_substat seed two_hundred_one fifty false substat_type
-      | HPP
-        let substat_type = "HP " in
-        get_formatted_substat seed seven four true substat_type
-      | SPD
-        let substat_type = "SPD " in
-        get_formatted_substat seed five two false substat_type
-      | CRIT_DMGP
-        let substat_type = "CRIT.DMG " in
-        get_formatted_substat seed five four true substat_type
-      | CRIT_RATEP
-        let substat_type = "CRIT.RATE " in
-        get_formatted_substat seed five three true substat_type
-      | ACCP
-        let substat_type = "ACC " in
-        get_formatted_substat seed seven four true substat_type
-      | RESP
-        let substat_type = "RES " in
-        get_formatted_substat seed seven four true substat_type
-      end
-    | _ =>
-      match substat_spec with
-        | ATK => 
-          let substat_type = "ATK " in
-          get_formatted_substat seed ninety_one ten false substat_type
-        | ATKP
-          let substat_type = "ATK " in
-          get_formatted_substat seed four one true substat_type
-        | DEF
-          let substat_type = "DEF " in
-          get_formatted_substat seed ninety_one ten false substat_type
-        | DEFP
-          let substat_type = "DEF " in
-          get_formatted_substat seed four one true substat_type
-        | HP
-          let substat_type = "HP " in
-          get_formatted_substat seed hundred_thirty_one twenty false substat_type
-        | HPP
-          let substat_type = "HP " in
-          get_formatted_substat seed four one true substat_type
-        | SPD
-          let substat_type = "SPD " in
-          get_formatted_substat seed three one false substat_type
-        | CRIT_DMGP
-          let substat_type = "CRIT.DMG " in
-          get_formatted_substat seed three three true substat_type
-        | CRIT_RATEP
-          let substat_type = "CRIT.RATE " in
-          get_formatted_substat seed three two true substat_type
-        | ACCP
-          let substat_type = "ACC " in
-          get_formatted_substat seed four one true substat_type
-        | RESP
-          let substat_type = "RES " in
-          get_formatted_substat seed four one true substat_type
-    end
+
 
 (***************************************************)
 (*             The contract definition             *)
