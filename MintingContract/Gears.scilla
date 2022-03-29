@@ -667,6 +667,7 @@ let get_substat_number =
         | RESP =>
           let substat_type = "RES " in
           get_formatted_substat seed four one true substat_type
+      end
     end
 
 
