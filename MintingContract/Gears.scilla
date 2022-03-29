@@ -208,7 +208,7 @@ let cons_five_substat =
   fun (param5: String) =>
     let l1 = cons_four_substat param1 param2 param3 param4 in
       Cons {String} param5 l1
-      
+
 let cons_six_substat = 
   fun (param1: String) =>
   fun (param2: String) =>
@@ -1636,78 +1636,129 @@ procedure MintToken(to: ByStr20, seed: Uint256, is_high_level: Bool)
           end
         end
       | False => (* This case is 5**)
-        token_level = "5*";
         match is_0_18 with
         | True => (* This case is Lowhelm’s Infinite Sword*)
           token_name = "Lowhelm’s Infinite Sword*";
-          token_trait = HeroesTrait token_name token_level;
+          gear_type = Weapon;
+          token_trait = get_token_trait_lv5 gear_type seed token_name;
           token_traits[token_id] := token_trait
         | False =>
           match is_1_18 with
           | True => (* This case is Lowhelm’s King Helmet*)
             token_name = "Lowhelm’s King Helmet";
+            gear_type = Helmet;
+            token_trait = get_token_trait_lv5 gear_type seed token_name;
+            token_traits[token_id] := token_trait
           | False =>
             match is_2_18 with
             | True =>(* This case is Lowhelm’s King Armor*)
               token_name = "Lowhelm’s King Armor";
+              gear_type = Armor;
+              token_trait = get_token_trait_lv5 gear_type seed token_name;
+              token_traits[token_id] := token_trait
             | False =>
               match is_3_18 with
               | True => (* This case is Lowhelm’s King Shoes*)
                 token_name = "Lowhelm’s King Shoes";
+                gear_type = Shoes;
+                token_trait = get_token_trait_lv5 gear_type seed token_name;
+                token_traits[token_id] := token_trait
               | False =>
                 match is_4_18 with
                 | True =>(* This case is Lowhelm’s Mythical Bow*)
                   token_name = "Lowhelm’s Mythical Bow";
+                  gear_type = Weapon;
+                  token_trait = get_token_trait_lv5 gear_type seed token_name;
+                  token_traits[token_id] := token_trait
                 | False =>
                   match is_5_18 with
                   | True =>(* This case is Lowhelm’s King Hunting Hat*)
                     token_name = "Lowhelm’s King Hunting Hat";
+                    gear_type = Helmet;
+                    token_trait = get_token_trait_lv5 gear_type seed token_name;
+                    token_traits[token_id] := token_trait
                   | False =>
                     match is_6_18 with
                     | True =>(* This case is Lowhelm’s King Hunting Suit*)
                       token_name = "Lowhelm’s King Hunting Suit";
+                      gear_type = Armor;
+                      token_trait = get_token_trait_lv5 gear_type seed token_name;
+                      token_traits[token_id] := token_trait
                     | False =>
                       match is_7_18 with
                       | True => (* This case is Lowhelm’s King Hunting Shoes*)
                         token_name = "Lowhelm’s King Hunting Shoes";
+                        gear_type = Shoes;
+                        token_trait = get_token_trait_lv5 gear_type seed token_name;
+                        token_traits[token_id] := token_trait
                       | False =>
                         match is_8_18 with
                         | True => (* This case is Lowhelm’s Superior Staff*)
                           token_name = "Lowhelm’s Superior Staff";
+                          gear_type = Weapon;
+                          token_trait = get_token_trait_lv5 gear_type seed token_name;
+                          token_traits[token_id] := token_trait
                         | False =>
                           match is_9_18 with
                           | True => (*Lowhelm’s King Wizard Hat*)
                             token_name = "Lowhelm’s King Wizard Hat";
+                            gear_type = Helmet;
+                            token_trait = get_token_trait_lv5 gear_type seed token_name;
+                            token_traits[token_id] := token_trait
                           | False =>
                             match is_10_18 with
                             | True => (* This case is Lowhelm’s King Robe*)
                               token_name = "Lowhelm’s King Robe";
+                              gear_type = Armor;
+                              token_trait = get_token_trait_lv5 gear_type seed token_name;
+                              token_traits[token_id] := token_trait
                             | False =>
                               match is_11_18 with
                               | True =>(* This case is Lowhelm’s King Silk Shoes*)
                                 token_name = "Lowhelm’s King Silk Shoes";
+                                gear_type = Shoes;
+                                token_trait = get_token_trait_lv5 gear_type seed token_name;
+                                token_traits[token_id] := token_trait
                               | False =>
                                 match is_12_18 with
                                 | True =>(* This case is Lowhelm’s Dagger of Fatality*)
                                   token_name = "Lowhelm’s Dagger of Fatality";
+                                  gear_type = Weapon;
+                                  token_trait = get_token_trait_lv5 gear_type seed token_name;
+                                  token_traits[token_id] := token_trait
                                 | False =>
                                   match is_13_18 with
                                   | True =>(* This case is Lowhelm’s King Headband*)
                                     token_name = "Lowhelm’s King Headband";
+                                    gear_type = Helmet;
+                                    token_trait = get_token_trait_lv5 gear_type seed token_name;
+                                    token_traits[token_id] := token_trait
                                   | False =>
                                     match is_14_18 with
                                     | True => (* This case is Lowhelm’s King Ninja Suit*)
                                       token_name = "Lowhelm’s King Ninja Suit";
+                                      gear_type = Armor;
+                                      token_trait = get_token_trait_lv5 gear_type seed token_name;
+                                      token_traits[token_id] := token_trait
                                     | False =>
                                       match is_15_18 with
                                       | True => (* This case is Lowhelm’s King Ninja Shoes*)
                                         token_name = "Lowhelm’s King Ninja Shoes";
+                                        gear_type = Shoes;
+                                        token_trait = get_token_trait_lv5 gear_type seed token_name;
+                                        token_traits[token_id] := token_trait
                                       | False =>
                                         match is_16_18 with
                                         | True => (* This case is Lowhelm’s King Ring*)
                                           token_name = "Lowhelm’s King Ring";
+                                          gear_type = Ring;
+                                          token_trait = get_token_trait_lv5 gear_type seed token_name;
+                                          token_traits[token_id] := token_trait
                                         | False => (* This case is Lowhelm’s King Necklace*)
                                           token_name = "Lowhelm’s King Necklace"
+                                          gear_type = Neclace;
+                                          token_trait = get_token_trait_lv5 gear_type seed token_name;
+                                          token_traits[token_id] := token_trait
                                         end
                                       end
                                     end
