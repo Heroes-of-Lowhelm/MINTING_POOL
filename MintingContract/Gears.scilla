@@ -197,7 +197,7 @@ let cons_four_substat =
   fun (param2: String) =>
   fun (param3: String) =>
   fun (param4: String) =>
-    let l1 = cons_three_substat param1 param2 param3
+    let l1 = cons_three_substat param1 param2 param3 in
       Cons {String} param4 l1
 
 let cons_five_substat = 
@@ -206,9 +206,18 @@ let cons_five_substat =
   fun (param3: String) =>
   fun (param4: String) =>
   fun (param5: String) =>
-    let l1 = cons_four_substat param1 param2 param3 param4
+    let l1 = cons_four_substat param1 param2 param3 param4 in
       Cons {String} param5 l1
-
+      
+let cons_six_substat = 
+  fun (param1: String) =>
+  fun (param2: String) =>
+  fun (param3: String) =>
+  fun (param4: String) =>
+  fun (param5: String) =>
+  fun (param6: String) =>
+    let l1 = cons_five_substat param1 param2 param3 param4 param5 in
+      Cons {String} param6 l1
 
 let get_token_trait_lv1 = 
   fun (gear_type: GearType) =>
@@ -312,6 +321,40 @@ let get_token_trait_lv4 =
       HeroesTrait token_name token_level mainstat substats
     end
 
+
+let get_bonus_trait = 
+  fun  (seed) =>
+    let rest_seven = builtin rem seed seven in
+    let is_zero = builtin eq rest_seven zero in
+    let is_one = builtin eq rest_seven one in
+    let is_two = builtin eq rest_seven two in
+    let is_three = builtin eq rest_seven three in
+    let is_four = builtin eq rest_seven four in
+    let is_five = builtin eq rest_seven five in
+    match is_zero with
+    | True => "Life Set"
+    | False =>
+      match is_one with
+      | True => "Harden Set"
+      | False =>
+        match is_two with
+        | True => "Strength Set"
+        | False =>
+          match is_three with
+          | True => "Degenerate Set"
+          | False =>
+            match is_four with
+            | True => "Effectiveness Set"
+            | False => 
+              match is_five with
+              | True => "Explosion Set"
+              | False => "Vampire Set"
+              end
+            end
+          end
+        end
+      end
+    end
 let get_token_trait_lv5 = 
   fun (gear_type: GearType) =>
   fun (seed: Uint256) =>
@@ -328,18 +371,20 @@ let get_token_trait_lv5 =
     let seed4 = builtin div seed3 hundred in
     let substat4 = get_substat gear_type seed4 gear_level in
 
-    (* CHAOTIC*)
     let seed5 = builtin div seed4 hundred in
-    let chao_rest_hundred = builtin rem seed5 hundred in
+    let bonusstat = get_bonus_trait seed5 in
+    (* CHAOTIC*)
+    let seed6 = builtin div seed5 hundred in
+    let chao_rest_hundred = builtin rem seed6 hundred in
     let chao_is_true = builtin eq chao_rest_hundred zero in
     match chao_is_true with
     | True =>
-      let seed6 = builtin dev seed5 hundred in
-      let substat5 = get_substat gear_type seed6 gear_level in
-      let substats = cons_five_substat substat1 substat2 substat3 substat4 substat5 in
+      let seed7 = builtin dev seed6 hundred in
+      let substat5 = get_substat gear_type seed7 gear_level in
+      let substats = cons_six_substat substat1 substat2 substat3 substat4 substat5 bonusstatin
       HeroesTrait token_name token_level mainstat substats
     | False =>
-      let substats = cons_four_substat substat1 substat2 substat3 substat4 in
+      let substats = cons_five_substat substat1 substat2 substat3 substat4 bonusstat in
       HeroesTrait token_name token_level mainstat substats
     end
      
