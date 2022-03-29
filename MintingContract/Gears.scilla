@@ -325,7 +325,7 @@ let get_token_trait_lv4 =
 
 
 let get_bonus_trait = 
-  fun (seed) =>
+  fun (seed: Uint256) =>
     let rest_seven = builtin rem seed seven in
     let is_zero = builtin eq rest_seven zero in
     let is_one = builtin eq rest_seven one in
