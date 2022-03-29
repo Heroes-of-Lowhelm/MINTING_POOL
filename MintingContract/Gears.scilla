@@ -17,7 +17,7 @@ type HeroesTrait =
 
 (* Batch Param type *)
 type BatchParam = 
-| BatchParam of ByStr20 String Uint256
+| BatchParam of ByStr20 String Uint256 Bool
 
 (* Global variables *)
 let zero_address = 0x0000000000000000000000000000000000000000
@@ -163,13 +163,15 @@ let make_error =
 
 let cons_one_batch = 
     fun (to: ByStr20) =>
+    fun (is_high_level: Bool) =>
     fun (seed: Uint256) =>
-        BatchParam to empty_string seed
+        BatchParam to empty_string seed is_high_level
 
 let cons_all_batch =
     fun (seeds: List (Uint256)) =>
     fun (to: ByStr20) =>
-        let f = cons_one_batch to in
+    fun (is_high_level: Bool) =>
+        let f = cons_one_batch to is_high_level in
         let batch_list_uint256 = @list_map Uint256 BatchParam in
         batch_list_uint256 f seeds
 
@@ -2220,8 +2222,8 @@ end
 
 procedure HandleMint(info: BatchParam)
   match info with
-  | BatchParam to token_uri seed=>
-    MintToken to seed;
+  | BatchParam to token_uri seed is_high_level=>
+    MintToken to seed is_high_level;
     token_id <- token_id_count;
     SetTokenURI token_id token_uri
   end
@@ -2475,11 +2477,11 @@ end
 (* @param: to_token_uri_pair_list - List of Pair (to, token_uri). *)
 (* @Requirements: *)
 (* - The contract must not be paused. Otherwise, it must throw `PausedError` *)
-transition BatchMint(to: ByStr20, seeds: List (Uint256))
+transition BatchMint(to: ByStr20, seeds: List (Uint256), is_high_level: Bool)
   RequireNotPaused;
   cur_id <- token_id_count;
   start_id = builtin add cur_id one;
-  to_token_uri_pair_list = cons_all_batch seeds to;
+  to_token_uri_pair_list = cons_all_batch seeds to is_high_level;
   forall to_token_uri_pair_list HandleMint;
   end_id <- token_id_count;
   e = {
