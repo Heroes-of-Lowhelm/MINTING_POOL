@@ -383,7 +383,7 @@ let get_token_trait_lv5 =
     | True =>
       let seed7 = builtin div seed6 hundred in
       let substat5 = get_substat gear_type seed7 gear_level in
-      let substats = cons_six_substat substat1 substat2 substat3 substat4 substat5 bonusstatin
+      let substats = cons_six_substat substat1 substat2 substat3 substat4 substat5 bonusstat in
       HeroesTrait token_name token_level mainstat substats
     | False =>
       let substats = cons_five_substat substat1 substat2 substat3 substat4 bonusstat in
