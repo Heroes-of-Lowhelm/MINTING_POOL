@@ -522,7 +522,6 @@ let get_substat_number =
   fun (lv: GearLevelType) =>
   fun (substat_spec: SubstatType) =>
   fun (seed: Uint256) =>
-    let result = 
     match lv with
     | Level3 =>
       match substat_spec with
@@ -675,7 +674,6 @@ let get_substat =
   fun (gear_type: GearType) =>
   fun (seed: Uint256) =>
   fun (lv: GearLevelType) =>
-    let substat = 
     let restEight = builtin rem seed eight in
     let is_zero_eight = builtin eq restEight zero in
     let is_one_eight = builtin eq restEight one in
