@@ -28,18 +28,6 @@ type Error =
 | CodeIsBatchPendingRequest
 | CodeIsDLNFTContractAddressNotSet
 
-(* let cons_one_batch = 
-    fun (to: ByStr20) =>
-    fun (seed: Uint256) =>
-        BatchParam to empty_string seed
-
-let cons_all_batch =
-    fun (seeds: List (Uint256)) =>
-    fun (to: ByStr20) =>
-        let f = cons_one_batch to in
-        let batch_list_uint256 = @list_map Uint256 BatchParam in
-        batch_list_uint256 f seeds *)
-
 let make_error =
     fun (result : Error) =>
         let result_code = 
@@ -96,6 +84,35 @@ field callerH35Addresses: Map Uint256 ByStr20 = Emp Uint256 ByStr20
 (* Mapping for caller Address id to caller address *)
 field batchCallerH35Addresses: Map Uint256 ByStr20 = Emp Uint256 ByStr20
 
+
+
+
+
+(* 1-3 Gear Summon requests*)
+field myG13Requests: Map Uint256 Bool = Emp Uint256 Bool
+field myG13BatchRequests: Map Uint256 Bool = Emp Uint256 Bool
+field requestedG13CallerCount: Uint256 = Uint256 0
+field processedG13CallerCount: Uint256 = Uint256 0
+field requestedG13BatchCallerCount: Uint256 = Uint256 0
+field processedG13BatchCallerCount: Uint256 = Uint256 0
+(* Mapping for caller Address id to caller address *)
+field callerG13Addresses: Map Uint256 ByStr20 = Emp Uint256 ByStr20
+(* Mapping for caller Address id to caller address *)
+field batchCallerG13Addresses: Map Uint256 ByStr20 = Emp Uint256 ByStr20
+
+
+
+(* 3-5 Gear Summon requests*)
+field myG35Requests: Map Uint256 Bool = Emp Uint256 Bool
+field myG35BatchRequests: Map Uint256 Bool = Emp Uint256 Bool
+field requestedG35CallerCount: Uint256 = Uint256 0
+field processedG35CallerCount: Uint256 = Uint256 0
+field requestedG35BatchCallerCount: Uint256 = Uint256 0
+field processedG35BatchCallerCount: Uint256 = Uint256 0
+(* Mapping for caller Address id to caller address *)
+field callerG35Addresses: Map Uint256 ByStr20 = Emp Uint256 ByStr20
+(* Mapping for caller Address id to caller address *)
+field batchCallerG35Addresses: Map Uint256 ByStr20 = Emp Uint256 ByStr20
 
 
 (* Dark/Light Heroes Summon requests*)
@@ -156,6 +173,26 @@ procedure IsNotH35PendingRequest(id: Uint256)
     end
 end
 
+procedure IsNotG13PendingRequest(id: Uint256)
+    isPendingRequest <- exists myG13Requests[id];
+    match isPendingRequest with
+    | False =>
+        err = CodeIsPendingRequest;
+        ThrowError err
+    | True =>
+    end
+end
+
+procedure IsNotG35PendingRequest(id: Uint256)
+    isPendingRequest <- exists myG35Requests[id];
+    match isPendingRequest with
+    | False =>
+        err = CodeIsPendingRequest;
+        ThrowError err
+    | True =>
+    end
+end
+
 procedure IsNotHDLPendingRequest(id: Uint256)
     isPendingRequest <- exists myHDLRequests[id];
     match isPendingRequest with
@@ -178,6 +215,27 @@ end
 
 procedure IsNotH35BatchPendingRequest(id: Uint256)
     isBatchPendingRequest <- exists myH35BatchRequests[id];
+    match isBatchPendingRequest with
+    | False =>
+        err = CodeIsBatchPendingRequest;
+        ThrowError err
+    | True =>
+    end
+end
+
+
+procedure IsNotG13BatchPendingRequest(id: Uint256)
+    isBatchPendingRequest <- exists myG13BatchRequests[id];
+    match isBatchPendingRequest with
+    | False =>
+        err = CodeIsBatchPendingRequest;
+        ThrowError err
+    | True =>
+    end
+end
+
+procedure IsNotG35BatchPendingRequest(id: Uint256)
+    isBatchPendingRequest <- exists myG35BatchRequests[id];
     match isBatchPendingRequest with
     | False =>
         err = CodeIsBatchPendingRequest;
