@@ -514,6 +514,24 @@ end
 
 (* @dev: Receive request id from the oracle contract. Only oracle contract allowed to invoke.   *)
 (* param id:      Request id.                                                                   *)
+transition getG13RequestId(id: Uint256)
+    IsNotOracle _sender;
+    myG13Requests[id] := true;
+    e = {_eventname: "ReceivedNewG13RequestId"; id: id};
+    event e
+end
+
+(* @dev: Receive request id from the oracle contract. Only oracle contract allowed to invoke.   *)
+(* param id:      Request id.                                                                   *)
+transition getG35RequestId(id: Uint256)
+    IsNotOracle _sender;
+    myG35Requests[id] := true;
+    e = {_eventname: "ReceivedNewG35RequestId"; id: id};
+    event e
+end
+
+(* @dev: Receive request id from the oracle contract. Only oracle contract allowed to invoke.   *)
+(* param id:      Request id.                                                                   *)
 transition getHDLRequestId(id: Uint256)
     IsNotOracle _sender;
     myHDLRequests[id] := true;
@@ -533,6 +551,21 @@ transition getH35BatchRequestId(id: Uint256)
     IsNotOracle _sender;
     myH35BatchRequests[id] := true;
     e = {_eventname: "ReceivedNewBatchH35RequestId"; id: id};
+    event e
+end
+
+
+transition getG13BatchRequestId(id: Uint256)
+    IsNotOracle _sender;
+    myG13BatchRequests[id] := true;
+    e = {_eventname: "ReceivedNewBatchG13RequestId"; id: id};
+    event e
+end
+
+transition getG35BatchRequestId(id: Uint256)
+    IsNotOracle _sender;
+    myG35BatchRequests[id] := true;
+    e = {_eventname: "ReceivedNewBatchG35RequestId"; id: id};
     event e
 end
 
