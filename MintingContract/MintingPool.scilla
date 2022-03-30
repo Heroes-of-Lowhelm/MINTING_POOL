@@ -569,6 +569,7 @@ transition getG35BatchRequestId(id: Uint256)
     event e
 end
 
+
 (* @dev: Receive Random Number and request id from oracle contract and then invokes Mint() transition of the Heroes NFT contract. Only oracle contract allowed to invoke  *)
 (* param randomnumber:      Random Number.                                                                     *)
 (* param id:       Request id.                                                                             *)
@@ -603,6 +604,37 @@ transition callbackH13(random_number: Uint256, id: Uint256)
     end
 end
 
+transition callbackG13(random_number: Uint256, id: Uint256)
+    IsNotOracle _sender;
+    IsNotG13PendingRequest id;
+    e = {_eventname: "RandomNumberG13Received"; random_number: random_number};
+    event e;
+    delete myG13Requests[id];
+    processedG13CallerCountTmp <- processedG13CallerCount;
+    callerAddress <- callerG13Addresses[processedG13CallerCountTmp];
+    delete callerG13Addresses[processedG13CallerCountTmp];
+    tmpVal = builtin add processedG13CallerCountTmp one;
+    processedG13CallerCount := tmpVal;
+    (* Call NFT contract's Mint function with the received random number *)
+    (* This contract address must be set as Minter in the NFT Contract *)
+    gerasNFTAddressTmp <- gearsNFTAddress;
+    match gerasNFTAddressTmp with
+    | Some v =>
+        match callerAddress with
+        | Some value =>
+            msg = {_tag: "Mint"; _recipient: v; _amount: zero; to: value; token_uri: ""; seed: random_number; is_high_level: false};
+            msgs = one_msg msg;
+            send msgs
+        | None =>
+            err = CodeIsCallerAddressNotSet;
+            ThrowError err
+        end
+    | None =>
+        err = CodeIsNFTContractAddressNotSet;
+        ThrowError err
+    end
+end
+
 (* @dev: Receive Random Number and request id from oracle contract and then invokes Mint() transition of the Heroes NFT contract. Only oracle contract allowed to invoke  *)
 (* param randomnumber:      Random Number.                                                                     *)
 (* param id:       Request id.                                                                             *)
@@ -621,6 +653,38 @@ transition callbackH35(random_number: Uint256, id: Uint256)
     (* This contract address must be set as Minter in the NFT Contract *)
     heroesNFTAddressTmp <- heroesNFTAddress;
     match heroesNFTAddressTmp with
+    | Some v =>
+        match callerAddress with
+        | Some value =>
+            msg = {_tag: "Mint"; _recipient: v; _amount: zero; to: value; token_uri: ""; seed: random_number; is_high_level: true};
+            msgs = one_msg msg;
+            send msgs
+        | None =>
+            err = CodeIsCallerAddressNotSet;
+            ThrowError err
+        end
+    | None =>
+        err = CodeIsNFTContractAddressNotSet;
+        ThrowError err
+    end
+end
+
+
+transition callbackG35(random_number: Uint256, id: Uint256)
+    IsNotOracle _sender;
+    IsNotG35PendingRequest id;
+    e = {_eventname: "RandomNumberG35Received"; random_number: random_number};
+    event e;
+    delete myG35Requests[id];
+    processedG35CallerCountTmp <- processedG35CallerCount;
+    callerAddress <- callerG35Addresses[processedG35CallerCountTmp];
+    delete callerG35Addresses[processedG35CallerCountTmp];
+    tmpVal = builtin add processedG35CallerCountTmp one;
+    processedG35CallerCount := tmpVal;
+    (* Call NFT contract's Mint function with the received random number *)
+    (* This contract address must be set as Minter in the NFT Contract *)
+    gerasNFTAddressTmp <- gearsNFTAddress;
+    match gerasNFTAddressTmp with
     | Some v =>
         match callerAddress with
         | Some value =>
