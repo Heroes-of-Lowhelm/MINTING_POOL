@@ -1791,6 +1791,7 @@ procedure MintToken(to: ByStr20, seed: Uint256, is_high_level: Bool)
             end
           end
         end
+      end
     end
   | False => (* This case is 1* ~ 3* Gear Summons*)
     match is_less_than_70 with
@@ -2219,6 +2220,7 @@ procedure MintToken(to: ByStr20, seed: Uint256, is_high_level: Bool)
             end
           end
         end
+      end
     end
   end
 end
