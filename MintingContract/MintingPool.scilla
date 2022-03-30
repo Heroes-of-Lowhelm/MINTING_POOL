@@ -57,6 +57,7 @@ contract MintingPool
 field oracleAddress: Option ByStr20 = None {ByStr20}
 field heroesNFTAddress: Option ByStr20 = None {ByStr20}
 field dlHeroesNFTAddress: Option ByStr20 = None {ByStr20}
+field gearsNFTAddress: Option ByStr20 = None {ByStr20}
 
 (* 1-3 Heroes Summon requests*)
 field myH13Requests: Map Uint256 Bool = Emp Uint256 Bool
@@ -281,6 +282,16 @@ transition setDLHeroesNFTAddress(dl_heroes_nft_address : ByStr20)
     heroesNFTAddressTmp = Some {ByStr20} dl_heroes_nft_address;
     dlHeroesNFTAddress := heroesNFTAddressTmp
 end
+
+
+(* @dev: Set Gear NFT Contract address. Only contract owner allowed to invoke.   *)
+(* param gear_nft_address:      Address of the Gears NFT address.                *)
+transition setGearNFTAddress(gear_nft_address : ByStr20)
+    IsNotOwner _sender;
+    gearsNFTAddressTmp = Some {ByStr20} gear_nft_address;
+    gearsNFTAddress := gearsNFTAddressTmp
+end
+
 
 (* @dev: Transition for users to Mint 1*-3* Heroes.This transition invokes requestRandomNumber() transition in the oracle contract   *)
 transition Mint13Heroes()
