@@ -585,3 +585,13 @@ transition Heroes_BatchMintCallback()
     e = {_eventname: "HeroesNFTBatchMintSuccessful"};
     event e
 end
+
+transition GearNFT_MintCallback(to: ByStr20; token_id: Uint256; token_uri: String)
+    e = {_eventname: "GearNFTMintSuccessful"};   
+    event e
+end
+
+transition GearNFT_BatchMintCallback()
+    e = {_eventname: "GearNFTBatchMintSuccessful"};
+    event e
+end

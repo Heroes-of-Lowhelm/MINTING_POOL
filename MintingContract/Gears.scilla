@@ -2471,12 +2471,12 @@ transition Mint(to: ByStr20, token_uri: String, seed: Uint256, is_high_level: Bo
   };
   event e;
   msg_to_recipient = {
-    _tag: "HeroesNFT_RecipientAcceptMint";
+    _tag: "GearNFT_RecipientAcceptMint";
     _recipient: to;
     _amount: Uint128 0
   };
   msg_to_sender = {
-    _tag: "Heroes_MintCallback";
+    _tag: "GearNFT_MintCallback";
     _recipient: _sender;
     _amount: Uint128 0;
     to: to;
@@ -2500,14 +2500,14 @@ transition BatchMint(to: ByStr20, seeds: List (Uint256), is_high_level: Bool)
   forall to_token_uri_pair_list HandleMint;
   end_id <- token_id_count;
   e = {
-    _eventname: "BatchMint";
+    _eventname: "GearNFTBatchMint";
     to_token_uri_pair_list: to_token_uri_pair_list;
     start_id: start_id;
     end_id: end_id
   };
   event e;
   msg_to_sender = {
-    _tag: "Heroes_BatchMintCallback";
+    _tag: "GearNFT_BatchMintCallback";
     _recipient: _sender;
     _amount: Uint128 0
   };
