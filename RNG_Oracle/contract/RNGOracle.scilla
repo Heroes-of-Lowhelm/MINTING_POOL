@@ -67,6 +67,16 @@ field pendingH35Requests: Map Uint256 Bool = Emp Uint256 Bool
 field pendingH35BatchRequests: Map Uint256 Bool = Emp Uint256 Bool
 
 
+(* 1-3 Gears Summons*)
+field pendingG13Requests: Map Uint256 Bool = Emp Uint256 Bool
+field pendingG13BatchRequests: Map Uint256 Bool = Emp Uint256 Bool
+
+
+(* 3-5 Gears Summons*)
+field pendingG35Requests: Map Uint256 Bool = Emp Uint256 Bool
+field pendingG35BatchRequests: Map Uint256 Bool = Emp Uint256 Bool
+
+
 (* Dark/Light Heroes Summons*)
 field pendingHDLRequests: Map Uint256 Bool = Emp Uint256 Bool
 
@@ -110,6 +120,21 @@ transition requestH13RandomNumber()
 end
 
 (* @dev: Generate random requset id and then returns it to the caller contract by invoking "getRequestId" transition  *)
+transition requestG13RandomNumber()
+    randNonceTemp <- randNonce;
+    cur_nonce = builtin add randNonceTemp one;
+    randNonce := cur_nonce;
+    blk <- & BLOCKNUMBER;
+    id = random cur_nonce blk _sender;
+    pendingG13Requests[id] := true;
+    e = {_eventname: "RequestedG13RandomNumber"; id: id; callerAddress: _sender};
+    event e;
+    msg = {_tag: "getG13RequestId"; _recipient: _sender; _amount: zero; id: id};
+    msgs = one_msg msg;
+    send msgs
+end
+
+(* @dev: Generate random requset id and then returns it to the caller contract by invoking "getRequestId" transition  *)
 transition requestH35RandomNumber()
     randNonceTemp <- randNonce;
     cur_nonce = builtin add randNonceTemp one;
@@ -120,6 +145,21 @@ transition requestH35RandomNumber()
     e = {_eventname: "RequestedH35RandomNumber"; id: id; callerAddress: _sender};
     event e;
     msg = {_tag: "getH35RequestId"; _recipient: _sender; _amount: zero; id: id};
+    msgs = one_msg msg;
+    send msgs
+end
+
+(* @dev: Generate random requset id and then returns it to the caller contract by invoking "getRequestId" transition  *)
+transition requestG35RandomNumber()
+    randNonceTemp <- randNonce;
+    cur_nonce = builtin add randNonceTemp one;
+    randNonce := cur_nonce;
+    blk <- & BLOCKNUMBER;
+    id = random cur_nonce blk _sender;
+    pendingG35Requests[id] := true;
+    e = {_eventname: "RequestedG35RandomNumber"; id: id; callerAddress: _sender};
+    event e;
+    msg = {_tag: "getG35RequestId"; _recipient: _sender; _amount: zero; id: id};
     msgs = one_msg msg;
     send msgs
 end
