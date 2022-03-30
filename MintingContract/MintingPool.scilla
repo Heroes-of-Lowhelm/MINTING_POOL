@@ -444,21 +444,46 @@ transition BatchMint13Heroes()
     end
 end
 
-(* @dev: Transition for users to Batch Mint 3*-5* Heroes.This transition invokes requestBatchRandomNumber() transition in the oracle contract   *)
-transition BatchMint35Heroes()
+(* @dev: Transition for users to Batch Mint 1*-3* Heroes.This transition invokes requestBatchRandomNumber() transition in the oracle contract   *)
+transition BatchMint13Gears()
     oracleAddressTmp <- oracleAddress;
-    heroesNFTAddressTmp <- heroesNFTAddress;
+    gearsNFTAddressTmp <- gearsNFTAddress;
     match oracleAddressTmp with
     | Some v =>
-        match heroesNFTAddressTmp with
-        | Some heroesValue =>
-            msg = {_tag: "requestH35BatchRandomNumber"; _recipient: v; _amount: zero};
+        match gearsNFTAddressTmp with
+        | Some gearsValue =>
+            msg = {_tag: "requestG13BatchRandomNumber"; _recipient: v; _amount: zero};
             msgs = one_msg msg;
             send msgs;
-            requestedH35BatchCallerCountTmp <- requestedH35BatchCallerCount;
-            batchCallerH35Addresses[requestedH35BatchCallerCountTmp] := _sender;
-            tmpVal = builtin add requestedH35BatchCallerCountTmp one;
-            requestedH35BatchCallerCount := tmpVal
+            requestedG13BatchCallerCountTmp <- requestedG13BatchCallerCount;
+            batchCallerG13Addresses[requestedG13BatchCallerCountTmp] := _sender;
+            tmpVal = builtin add requestedG13BatchCallerCountTmp one;
+            requestedG13BatchCallerCount := tmpVal
+        | None =>
+            err = CodeIsNFTContractAddressNotSet;
+            ThrowError err
+        end
+    | None =>
+        err = CodeIsOracleAddressNotSet;
+        ThrowError err
+    end
+end
+
+(* @dev: Transition for users to Batch Mint 3*-5* Heroes.This transition invokes requestBatchRandomNumber() transition in the oracle contract   *)
+transition BatchMint35Gears()
+    oracleAddressTmp <- oracleAddress;
+    gerasNFTAddressTmp <- gearsNFTAddress;
+    match oracleAddressTmp with
+    | Some v =>
+        match gerasNFTAddressTmp with
+        | Some gearsValue =>
+            msg = {_tag: "requestG35BatchRandomNumber"; _recipient: v; _amount: zero};
+            msgs = one_msg msg;
+            send msgs;
+            requestedG35BatchCallerCountTmp <- requestedG35BatchCallerCount;
+            batchCallerG35Addresses[requestedG35BatchCallerCountTmp] := _sender;
+            tmpVal = builtin add requestedG35BatchCallerCountTmp one;
+            requestedG35BatchCallerCount := tmpVal
         | None =>
             err = CodeIsNFTContractAddressNotSet;
             ThrowError err
