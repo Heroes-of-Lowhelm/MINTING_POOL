@@ -1371,7 +1371,7 @@ procedure MintToken(to: ByStr20, seed: Uint256, is_high_level: Bool)
       match is_0_18 with
       | True => (* This case is Steel Sword*)
         token_name = "Steel Sword*";
-        gear_type = Weapon;
+        gear_type = Weapon
       | False =>
         match is_1_18 with
         | True => (* This case is Steel Helmet*)
