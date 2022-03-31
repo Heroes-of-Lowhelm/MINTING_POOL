@@ -4,7 +4,9 @@
   "description": "",
   "main": "HolTWAPOracle.js",
   "scripts": {
-    "start": "nodemon index.js"
+    "deploy-heroes": "nodemon heroesNFT.js",
+    "deploy-dl-heroes": "nodemon dlHeroesNFT.js",
+    "deploy-gears": "nodemon gearsNFT.js"
   },
   "author": "",
   "license": "ISC",
