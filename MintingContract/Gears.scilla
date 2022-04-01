@@ -134,6 +134,9 @@ type  SubstatType =
   | ACCP
   | RESP
 
+type NameAndGearType = 
+  | NameAndGearType of String GearType
+
 let make_error =
   fun (result: Error) =>
     let result_code =
@@ -1363,98 +1366,96 @@ procedure MintToken(to: ByStr20, seed: Uint256, is_high_level: Bool)
   is_16_18 = builtin eq restEighteen sixteen;
 
   match is_high_level with
-  | True => (* This case is 3* ~ 5* Gear Summons*)
+  | True => 
     match is_less_than_80 with
-    | True => (* This case is 3**)
-      tokenname = "";
-      gear_type = Weapon;
-      match is_0_18 with
-      | True => (* This case is Steel Sword*)
-        tokenname = "Steel Sword*";
-        gear_type = Weapon
+    | True => 
+      name_and_type = match is_0_18 with
+      | True => 
+        let tokenname = "Steel Sword*" in let gear_type = Weapon in
+        NameAndGearType tokenname gear_type
       | False =>
         match is_1_18 with
-        | True => (* This case is Steel Helmet*)
-          tokenname = "Steel Helmet";
-          gear_type = Helmet
+        | True =>
+          let tokenname = "Steel Helmet" in let gear_type = Helmet in
+          NameAndGearType tokenname gear_type
         | False =>
           match is_2_18 with
-          | True =>(* This case is Steel Armor*)
-            tokenname = "Steel Armor";
-            gear_type = Armor
+          | True =>
+            let tokenname = "Steel Armor" in let gear_type = Armor in
+            NameAndGearType tokenname gear_type
           | False =>
             match is_3_18 with
-            | True => (* This case is Steel Shoes*)
-              tokenname = "Steel Shoes";
-              gear_type = Shoes
+            | True =>
+              let tokenname = "Steel Shoes" in let gear_type = Shoes in
+              NameAndGearType tokenname gear_type
             | False =>
               match is_4_18 with
-              | True =>(* This case is Intermediate Archer Bow*)
-                tokenname = "Intermediate Archer Bow";
-                gear_type = Weapon
+              | True =>
+                let tokenname = "Intermediate Archer Bow" in let gear_type = Weapon in
+                NameAndGearType tokenname gear_type
               | False =>
                 match is_5_18 with
-                | True =>(* This case is Light Huntsman Helmet*)
-                  tokenname = "Light Huntsman Helmet";
-                  gear_type = Helmet
+                | True =>
+                  let tokenname = "Light Huntsman Helmet" in let gear_type = Helmet in
+                  NameAndGearType tokenname gear_type
                 | False =>
                   match is_6_18 with
-                  | True =>(* This case is Light Huntsman Armor*)
-                    tokenname = "Light Huntsman Armor";
-                    gear_type = Armor
+                  | True =>
+                    let tokenname = "Light Huntsman Armor" in let gear_type = Armor in
+                    NameAndGearType tokenname gear_type
                   | False =>
                     match is_7_18 with
-                    | True => (* This case is Light Huntsman Boots*)
-                      tokenname = "Light Huntsman Boots";
-                      gear_type = Shoes
+                    | True =>
+                      let tokenname = "Light Huntsman Boots" in let gear_type = Shoes in
+                      NameAndGearType tokenname gear_type
                     | False =>
                       match is_8_18 with
-                      | True => (* This case is Enchanted Wand*)
-                        tokenname = "Enchanted Wand";
-                        gear_type = Weapon
+                      | True =>
+                        let tokenname = "Enchanted Wand" in let gear_type = Weapon in
+                        NameAndGearType tokenname gear_type
                       | False =>
                         match is_9_18 with
-                        | True => (*Enchanted Silk Cap*)
-                          tokenname = "Enchanted Silk Cap";
-                          gear_type = Helmet
+                        | True =>
+                          let tokenname = "Enchanted Silk Cap" in let gear_type = Helmet in
+                          NameAndGearType tokenname gear_type
                         | False =>
                           match is_10_18 with
-                          | True => (* This case is Enchanted Silk Robe*)
-                            tokenname = "Enchanted Silk Robe";
-                            gear_type = Armor
+                          | True =>
+                            let tokenname = "Enchanted Silk Robe" in let gear_type = Armor in
+                            NameAndGearType tokenname gear_type
                           | False =>
                             match is_11_18 with
-                            | True =>(* This case is Enchanted Silk Shoes*)
-                              tokenname = "Enchanted Silk Shoes";
-                              gear_type = Shoes
+                            | True =>
+                              let tokenname = "Enchanted Silk Shoes" in let gear_type = Shoes in
+                              NameAndGearType tokenname gear_type
                             | False =>
                               match is_12_18 with
-                              | True =>(* This case is Steel Kusarigama*)
-                                tokenname = "Steel Kusarigama";
-                                gear_type = Weapon
+                              | True =>
+                                let tokenname = "Steel Kusarigama" in let gear_type = Weapon in
+                                NameAndGearType tokenname gear_type
                               | False =>
                                 match is_13_18 with
-                                | True =>(* This case is Black Soft Beanie*)
-                                  tokenname = "Black Soft Beanie";
-                                  gear_type = Helmet
+                                | True =>
+                                  let tokenname = "Black Soft Beanie" in let gear_type = Helmet in
+                                  NameAndGearType tokenname gear_type
                                 | False =>
                                   match is_14_18 with
-                                  | True => (* This case is Black Soft Hoodie*)
-                                    tokenname = "Black Soft Hoodie";
-                                    gear_type = Armor
+                                  | True =>
+                                    let tokenname = "Black Soft Hoodie" in let gear_type = Armor in
+                                    NameAndGearType tokenname gear_type
                                   | False =>
                                     match is_15_18 with
-                                    | True => (* This case is Black Soft Shoes*)
-                                      tokenname = "Black Soft Shoes";
-                                      gear_type = Shoes
+                                    | True =>
+                                      let tokenname = "Black Soft Shoes" in let gear_type = Shoes in
+                                      NameAndGearType tokenname gear_type
                                     | False =>
                                       match is_16_18 with
-                                      | True => (* This case is Silver Ring*)
-                                        tokenname = "Silver Ring";
-                                        gear_type = Ring
-                                      | False => (* This case is *)
-                                        tokenname = "Silver Necklace";
-                                        gear_type = Neclace
+                                      | True =>
+                                        let tokenname = "Silver Ring" in let gear_type = Ring in
+                                        NameAndGearType tokenname gear_type
+                                      | False =>
+                                        let tokenname = "Silver Necklace" in let gear_type = Neclace in
+                                        NameAndGearType tokenname gear_type
                                       end
                                     end
                                   end
@@ -1472,100 +1473,101 @@ procedure MintToken(to: ByStr20, seed: Uint256, is_high_level: Bool)
           end
         end
       end;
+      match name_and_type with
+      | NameAndGearType tokenname gear_type =>
       token_trait = get_token_trait_lv3 gear_type seed tokenname;
       token_traits[token_id] := token_trait
+      end
     | False =>
       match is_less_than_98 with
-      | True => (* This case is 4**)
-        tokenname = "";
-        gear_type = Weapon;
-        match is_0_18 with
-        | True => (* This case is Crimson Sword*)
-          tokenname = "Crimson Sword*";
-          gear_type = Weapon
+      | True =>
+        name_and_type = match is_0_18 with
+        | True =>
+          let tokenname = "Crimson Sword*" in let gear_type = Weapon in
+          NameAndGearType tokenname gear_type
         | False =>
           match is_1_18 with
-          | True => (* This case is Golden Helmet*)
-            tokenname = "Golden Helmet";
-            gear_type = Helmet
+          | True =>
+            let tokenname = "Golden Helmet" in let gear_type = Helmet in
+            NameAndGearType tokenname gear_type
           | False =>
             match is_2_18 with
-            | True =>(* This case is Golden Armor*)
-              tokenname = "Golden Armor";
-              gear_type = Armor
+            | True =>
+              let tokenname = "Golden Armor" in let gear_type = Armor in
+              NameAndGearType tokenname gear_type
             | False =>
               match is_3_18 with
-              | True => (* This case is Golden Shoes*)
-                tokenname = "Golden Shoes";
-                gear_type = Shoes
+              | True =>
+                let tokenname = "Golden Shoes" in let gear_type = Shoes in
+                NameAndGearType tokenname gear_type
               | False =>
                 match is_4_18 with
-                | True =>(* This case is Crimson Crossbow*)
-                  tokenname = "Crimson Crossbow";
-                  gear_type = Weapon
+                | True =>
+                  let tokenname = "Crimson Crossbow" in let gear_type = Weapon in
+                  NameAndGearType tokenname gear_type
                 | False =>
                   match is_5_18 with
-                  | True =>(* This case is Hardened Leather Helmet*)
-                    tokenname = "Hardened Leather Helmet";
-                    gear_type = Helmet
+                  | True =>
+                    let tokenname = "Hardened Leather Helmet" in let gear_type = Helmet in
+                    NameAndGearType tokenname gear_type
                   | False =>
                     match is_6_18 with
-                    | True =>(* This case is Hardened Leather Armor*)
-                      tokenname = "Hardened Leather Armor";
-                      gear_type = Armor
+                    | True =>
+                      let tokenname = "Hardened Leather Armor" in let gear_type = Armor in
+                      NameAndGearType tokenname gear_type
                     | False =>
                       match is_7_18 with
-                      | True => (* This case is Hardened Leather Shoes*)
-                        tokenname = "Hardened Leather Shoes";
-                        gear_type = Shoes
+                      | True =>
+                        let tokenname = "Hardened Leather Shoes" in let gear_type = Shoes in
+                        NameAndGearType tokenname gear_type
                       | False =>
                         match is_8_18 with
-                        | True => (* This case is Crimson Staff*)
-                          tokenname = "Crimson Staff";
-                          gear_type = Weapon
+                        | True =>
+                          let tokenname = "Crimson Staff" in let gear_type = Weapon in
+                          NameAndGearType tokenname gear_type
                         | False =>
                           match is_9_18 with
-                          | True => (*Hardened Silk Cap*)
-                            tokenname = "Hardened Silk Cap";
-                            gear_type = Helmet
+                          | True =>
+                            let tokenname = "Hardened Silk Cap" in let gear_type = Helmet in
+                            NameAndGearType tokenname gear_type
                           | False =>
                             match is_10_18 with
-                            | True => (* This case is Hardened Silk Robe*)
-                              tokenname = "Hardened Silk Robe";
-                              gear_type = Armor
+                            | True =>
+                              let tokenname = "Hardened Silk Robe" in let gear_type = Armor in
+                              NameAndGearType tokenname gear_type
                             | False =>
                               match is_11_18 with
-                              | True =>(* This case is Hardened Silk Shoes*)
-                                tokenname = "Hardened Silk Shoes";
-                                gear_type = Shoes
+                              | True =>
+                                let tokenname = "Hardened Silk Shoes" in let gear_type = Shoes in
+                                NameAndGearType tokenname gear_type
                               | False =>
                                 match is_12_18 with
-                                | True =>(* This case is Dual Kusarigama*)
-                                  tokenname = "Dual Kusarigama";
-                                  gear_type = Weapon
+                                | True =>
+                                  let tokenname = "Dual Kusarigama" in let gear_type = Weapon in
+                                  NameAndGearType tokenname gear_type
                                 | False =>
                                   match is_13_18 with
-                                  | True =>(* This case is Enchanted Headband*)
-                                    tokenname = "Enchanted Headband";
-                                    gear_type = Helmet
+                                  | True =>
+                                    let tokenname = "Enchanted Headband" in let gear_type = Helmet in
+                                    NameAndGearType tokenname gear_type
                                   | False =>
                                     match is_14_18 with
-                                    | True => (* This case is Enchanted Light Sweater*)
-                                      tokenname = "Enchanted Light Sweater";
-                                      gear_type = Armor
+                                    | True =>
+                                      let tokenname = "Enchanted Light Sweater" in let gear_type = Armor in
+                                      NameAndGearType tokenname gear_type
                                     | False =>
                                       match is_15_18 with
-                                      | True => (* This case is Enchanted Light Sneakers*)
-                                        tokenname = "Enchanted Light Sneakers";
-                                        gear_type = Shoes
+                                      | True =>
+                                        let tokenname = "Enchanted Light Sneakers" in let gear_type = Shoes in
+                                        NameAndGearType tokenname gear_type
                                       | False =>
                                         match is_16_18 with
-                                        | True => (* This case is Gold Ring*)
-                                          tokenname = "Gold Ring";
-                                          gear_type = Ring
-                                        | False => (* This case is Gold Necklace*)
-                                          tokenname = "Gold Necklace";
-                                          gear_type = Neclace
+                                        | True =>
+                                          let tokenname = "Gold Ring" in let gear_type = Ring in
+                                          NameAndGearType tokenname gear_type
+                                        | False =>
+                                          let tokenname = "Gold Necklace" in let gear_type = Neclace in
+                                          NameAndGearType tokenname gear_type
                                         end
                                       end
                                     end
@@ -1583,98 +1585,99 @@ procedure MintToken(to: ByStr20, seed: Uint256, is_high_level: Bool)
             end
           end
         end;
-        token_trait = get_token_trait_lv4 gear_type seed tokenname;
-        token_traits[token_id] := token_trait
-      | False => (* This case is 5**)
-        tokenname = "";
-        gear_type = Weapon;
-        match is_0_18 with
-        | True => (* This case is Lowhelm’s Infinite Sword*)
-          tokenname = "Lowhelms Infinite Sword*";
-          gear_type = Weapon
+        match name_and_type with
+        | NameAndGearType tokenname gear_type =>
+          token_trait = get_token_trait_lv4 gear_type seed tokenname;
+          token_traits[token_id] := token_trait
+        end
+      | False =>
+        name_and_type = match is_0_18 with
+        | True =>
+          let tokenname = "Lowhelms Infinite Sword*" in let gear_type = Weapon in
+          NameAndGearType tokenname gear_type
         | False =>
           match is_1_18 with
-          | True => (* This case is Lowhelm’s King Helmet*)
-            tokenname = "Lowhelms King Helmet";
-            gear_type = Helmet
+          | True =>
+            let tokenname = "Lowhelms King Helmet" in let gear_type = Helmet in
+            NameAndGearType tokenname gear_type
           | False =>
             match is_2_18 with
-            | True =>(* This case is Lowhelm’s King Armor*)
-              tokenname = "Lowhelms King Armor";
-              gear_type = Armor
+            | True =>
+              let tokenname = "Lowhelms King Armor" in let gear_type = Armor in
+              NameAndGearType tokenname gear_type
             | False =>
               match is_3_18 with
-              | True => (* This case is Lowhelm’s King Shoes*)
-                tokenname = "Lowhelms King Shoes";
-                gear_type = Shoes
+              | True =>
+                let tokenname = "Lowhelms King Shoes" in let gear_type = Shoes in
+                NameAndGearType tokenname gear_type
               | False =>
                 match is_4_18 with
-                | True =>(* This case is Lowhelm’s Mythical Bow*)
-                  tokenname = "Lowhelms Mythical Bow";
-                  gear_type = Weapon
+                | True =>
+                  let tokenname = "Lowhelms Mythical Bow" in let gear_type = Weapon in
+                  NameAndGearType tokenname gear_type
                 | False =>
                   match is_5_18 with
-                  | True =>(* This case is Lowhelm’s King Hunting Hat*)
-                    tokenname = "Lowhelms King Hunting Hat";
-                    gear_type = Helmet
+                  | True =>
+                    let tokenname = "Lowhelms King Hunting Hat" in let gear_type = Helmet in
+                    NameAndGearType tokenname gear_type
                   | False =>
                     match is_6_18 with
-                    | True =>(* This case is Lowhelm’s King Hunting Suit*)
-                      tokenname = "Lowhelms King Hunting Suit";
-                      gear_type = Armor
+                    | True =>
+                      let tokenname = "Lowhelms King Hunting Suit" in let gear_type = Armor in
+                      NameAndGearType tokenname gear_type
                     | False =>
                       match is_7_18 with
-                      | True => (* This case is Lowhelm’s King Hunting Shoes*)
-                        tokenname = "Lowhelms King Hunting Shoes";
-                        gear_type = Shoes
+                      | True => 
+                        let tokenname = "Lowhelms King Hunting Shoes" in let gear_type = Shoes in
+                        NameAndGearType tokenname gear_type
                       | False =>
                         match is_8_18 with
-                        | True => (* This case is Lowhelm’s Superior Staff*)
-                          tokenname = "Lowhelms Superior Staff";
-                          gear_type = Weapon
+                        | True =>
+                          let tokenname = "Lowhelms Superior Staff" in let gear_type = Weapon in
+                          NameAndGearType tokenname gear_type
                         | False =>
                           match is_9_18 with
-                          | True => (*Lowhelm’s King Wizard Hat*)
-                            tokenname = "Lowhelms King Wizard Hat";
-                            gear_type = Helmet
+                          | True =>
+                            let tokenname = "Lowhelms King Wizard Hat" in let gear_type = Helmet in
+                            NameAndGearType tokenname gear_type
                           | False =>
                             match is_10_18 with
-                            | True => (* This case is Lowhelm’s King Robe*)
-                              tokenname = "Lowhelms King Robe";
-                              gear_type = Armor
+                            | True =>
+                              let tokenname = "Lowhelms King Robe" in let gear_type = Armor in
+                              NameAndGearType tokenname gear_type
                             | False =>
                               match is_11_18 with
-                              | True =>(* This case is Lowhelm’s King Silk Shoes*)
-                                tokenname = "Lowhelms King Silk Shoes";
-                                gear_type = Shoes
+                              | True =>
+                                let tokenname = "Lowhelms King Silk Shoes" in let gear_type = Shoes in
+                                NameAndGearType tokenname gear_type
                               | False =>
                                 match is_12_18 with
-                                | True =>(* This case is Lowhelm’s Dagger of Fatality*)
-                                  tokenname = "Lowhelms Dagger of Fatality";
-                                  gear_type = Weapon
+                                | True =>
+                                  let tokenname = "Lowhelms Dagger of Fatality" in let gear_type = Weapon in
+                                  NameAndGearType tokenname gear_type
                                 | False =>
                                   match is_13_18 with
-                                  | True =>(* This case is Lowhelm’s King Headband*)
-                                    tokenname = "Lowhelms King Headband";
-                                    gear_type = Helmet
+                                  | True =>
+                                    let tokenname = "Lowhelms King Headband" in let gear_type = Helmet in
+                                    NameAndGearType tokenname gear_type
                                   | False =>
                                     match is_14_18 with
-                                    | True => (* This case is Lowhelm’s King Ninja Suit*)
-                                      tokenname = "Lowhelms King Ninja Suit";
-                                      gear_type = Armor
+                                    | True =>
+                                      let tokenname = "Lowhelms King Ninja Suit" in let gear_type = Armor in
+                                      NameAndGearType tokenname gear_type
                                     | False =>
                                       match is_15_18 with
-                                      | True => (* This case is Lowhelm’s King Ninja Shoes*)
-                                        tokenname = "Lowhelms King Ninja Shoes";
-                                        gear_type = Shoes
+                                      | True =>
+                                        let tokenname = "Lowhelms King Ninja Shoes" in let gear_type = Shoes in
+                                        NameAndGearType tokenname gear_type
                                       | False =>
                                         match is_16_18 with
-                                        | True => (* This case is Lowhelm’s King Ring*)
-                                          tokenname = "Lowhelms King Ring";
-                                          gear_type = Ring
-                                        | False => (* This case is Lowhelm’s King Necklace*)
-                                          tokenname = "Lowhelms King Necklace";
-                                          gear_type = Neclace
+                                        | True =>
+                                          let tokenname = "Lowhelms King Ring" in let gear_type = Ring in
+                                          NameAndGearType tokenname gear_type
+                                        | False =>
+                                          let tokenname = "Lowhelms King Necklace" in let gear_type = Neclace in
+                                          NameAndGearType tokenname gear_type
                                         end
                                       end
                                     end
@@ -1692,102 +1695,103 @@ procedure MintToken(to: ByStr20, seed: Uint256, is_high_level: Bool)
             end
           end
         end;
-        token_trait = get_token_trait_lv5 gear_type seed tokenname;
-        token_traits[token_id] := token_trait
+        match name_and_type with
+        | NameAndGearType tokenname gear_type =>
+          token_trait = get_token_trait_lv5 gear_type seed tokenname;
+          token_traits[token_id] := token_trait
+        end
       end
     end
   | False => (* This case is 1* ~ 3* Gear Summons*)
     match is_less_than_70 with
-    | True => (* This case is 1**)
-      tokenname = "";
-      gear_type = Weapon;
-      match is_0_18 with
-      | True => (* This case is Wooden Sword*)
-        tokenname = "Wooden Sword*";
-        gear_type = Weapon
+    | True =>
+      name_and_type = match is_0_18 with
+      | True =>
+        let tokenname = "Wooden Sword*" in let gear_type = Weapon in
+        NameAndGearType tokenname gear_type
       | False =>
         match is_1_18 with
-        | True => (* This case is Copper Helmet*)
-          tokenname = "Copper Helmet";
-          gear_type = Helmet
+        | True =>
+          let tokenname = "Copper Helmet" in let gear_type = Helmet in
+          NameAndGearType tokenname gear_type
         | False =>
           match is_2_18 with
-          | True =>(* This case is Copper Armor*)
-            tokenname = "Copper Armor";
-            gear_type = Armor
+          | True =>
+            let tokenname = "Copper Armor" in let gear_type = Armor in
+            NameAndGearType tokenname gear_type
           | False =>
             match is_3_18 with
-            | True => (* This case is Copper Shoes*)
-              tokenname = "Copper Shoes";
-              gear_type = Shoes
+            | True =>
+              let tokenname = "Copper Shoes" in let gear_type = Shoes in
+              NameAndGearType tokenname gear_type
             | False =>
               match is_4_18 with
-              | True =>(* This case is Basic Bow*)
-                tokenname = "Basic Bow";
-                gear_type = Weapon
+              | True =>
+                let tokenname = "Basic Bow" in let gear_type = Weapon in
+                NameAndGearType tokenname gear_type
               | False =>
                 match is_5_18 with
-                | True =>(* This case is Leather Helmet*)
-                  tokenname = "Leather Helmet";
-                  gear_type = Helmet
+                | True =>
+                  let tokenname = "Leather Helmet" in let gear_type = Helmet in
+                  NameAndGearType tokenname gear_type
                 | False =>
                   match is_6_18 with
-                  | True =>(* This case is Leather Armor*)
-                    tokenname = "Leather Armor";
-                    gear_type = Armor
+                  | True =>
+                    let tokenname = "Leather Armor" in let gear_type = Armor in
+                    NameAndGearType tokenname gear_type
                   | False =>
                     match is_7_18 with
-                    | True => (* This case is Leather Shoes*)
-                      tokenname = "Leather Shoes";
-                      gear_type = Shoes
+                    | True =>
+                      let tokenname = "Leather Shoes" in let gear_type = Shoes in
+                      NameAndGearType tokenname gear_type
                     | False =>
                       match is_8_18 with
-                      | True => (* This case is Enchanted Wand*)
-                        tokenname = "Basic Wand";
-                        gear_type = Weapon
+                      | True =>
+                        let tokenname = "Basic Wand" in let gear_type = Weapon in
+                        NameAndGearType tokenname gear_type
                       | False =>
                         match is_9_18 with
-                        | True => (*Silk Cap*)
-                          tokenname = "Silk Cap";
-                          gear_type = Helmet
+                        | True =>
+                          let tokenname = "Silk Cap" in let gear_type = Helmet in
+                          NameAndGearType tokenname gear_type
                         | False =>
                           match is_10_18 with
-                          | True => (* This case is Silk Robe*)
-                            tokenname = "Silk Robe";
-                            gear_type = Armor
+                          | True =>
+                            let tokenname = "Silk Robe" in let gear_type = Armor in
+                            NameAndGearType tokenname gear_type
                           | False =>
                             match is_11_18 with
-                            | True =>(* This case is Silk Shoes*)
-                              tokenname = "Silk Shoes";
-                              gear_type = Shoes
+                            | True =>
+                              let tokenname = "Silk Shoes" in let gear_type = Shoes in
+                              NameAndGearType tokenname gear_type
                             | False =>
                               match is_12_18 with
-                              | True =>(* This case is Basic Dagger*)
-                                tokenname = "Basic Dagger";
-                                gear_type = Weapon
+                              | True =>
+                                let tokenname = "Basic Dagger" in let gear_type = Weapon in
+                                NameAndGearType tokenname gear_type
                               | False =>
                                 match is_13_18 with
-                                | True =>(* This case is Common Headband*)
-                                  tokenname = "Common Headband";
-                                  gear_type = Helmet
+                                | True =>
+                                  let tokenname = "Common Headband" in let gear_type = Helmet in
+                                  NameAndGearType tokenname gear_type
                                 | False =>
                                   match is_14_18 with
-                                  | True => (* This case is White Shirt*)
-                                    tokenname = "White Shirt";
-                                    gear_type = Armor
+                                  | True =>
+                                    let tokenname = "White Shirt" in let gear_type = Armor in
+                                    NameAndGearType tokenname gear_type
                                   | False =>
                                     match is_15_18 with
-                                    | True => (* This case is Soft Shoes*)
-                                      tokenname = "Soft Shoes";
-                                      gear_type = Shoes
+                                    | True =>
+                                      let tokenname = "Soft Shoes" in let gear_type = Shoes in
+                                      NameAndGearType tokenname gear_type
                                     | False =>
                                       match is_16_18 with
-                                      | True => (* This case is Copper Ring*)
-                                        tokenname = "Copper Ring";
-                                        gear_type = Ring
-                                      | False => (* This case is Copper Necklace*)
-                                        tokenname = "Copper Necklace";
-                                        gear_type = Neclace
+                                      | True =>
+                                        let tokenname = "Copper Ring" in let gear_type = Ring in
+                                        NameAndGearType tokenname gear_type
+                                      | False =>
+                                        let tokenname = "Copper Necklace" in let gear_type = Neclace in
+                                        NameAndGearType tokenname gear_type
                                       end
                                     end
                                   end
@@ -1805,100 +1809,101 @@ procedure MintToken(to: ByStr20, seed: Uint256, is_high_level: Bool)
           end
         end
       end;
+      match name_and_type with
+      | NameAndGearType tokenname gear_type =>
       token_trait = get_token_trait_lv1 gear_type seed tokenname;
       token_traits[token_id] := token_trait
+      end
     | False =>
       match is_less_than_95 with
       | True => (* This case is 2**)
-        tokenname = "";
-        gear_type = Weapon;
         match is_0_18 with
-        | True => (* This case is Stone Sword*)
-          tokenname = "Stone Sword*";
-          gear_type = Weapon
+        | True =>
+          let tokenname = "Stone Sword*" in let gear_type = Weapon in
+          NameAndGearType tokenname gear_type
         | False =>
           match is_1_18 with
-          | True => (* This case is Bronze Helmet*)
-            tokenname = "Bronze Helmet";
-            gear_type = Helmet
+          | True => 
+            let tokenname = "Bronze Helmet" in let gear_type = Helmet in
+            NameAndGearType tokenname gear_type
           | False =>
             match is_2_18 with
-            | True =>(* This case is Bronze Armor*)
-              tokenname = "Bronze Armor";
-              gear_type = Armor
+            | True =>
+              let tokenname = "Bronze Armor" in let gear_type = Armor in
+              NameAndGearType tokenname gear_type
             | False =>
               match is_3_18 with
-              | True => (* This case is Bronze Shoes*)
-                tokenname = "Bronze Shoes";
-                gear_type = Shoes
+              | True =>
+                let tokenname = "Bronze Shoes" in let gear_type = Shoes in
+                NameAndGearType tokenname gear_type
               | False =>
                 match is_4_18 with
-                | True =>(* This case is Apprentice Crossbow*)
-                  tokenname = "Apprentice Crossbow";
-                  gear_type = Weapon
+                | True =>
+                  let tokenname = "Apprentice Crossbow" in let gear_type = Weapon in
+                  NameAndGearType tokenname gear_type
                 | False =>
                   match is_5_18 with
-                  | True =>(* This case is Hardened Leather Helmet*)
-                    tokenname = "Hardened Leather Helmet";
-                    gear_type = Helmet
+                  | True =>
+                    let tokenname = "Hardened Leather Helmet" in let gear_type = Helmet in
+                    NameAndGearType tokenname gear_type
                   | False =>
                     match is_6_18 with
-                    | True =>(* This case is Hardened Leather Armor*)
-                      tokenname = "Hardened Leather Armor";
-                      gear_type = Armor
+                    | True =>
+                      let tokenname = "Hardened Leather Armor" in let gear_type = Armor in
+                      NameAndGearType tokenname gear_type
                     | False =>
                       match is_7_18 with
-                      | True => (* This case is Hardened Leather Boots*)
-                        tokenname = "Hardened Leather Boots";
-                        gear_type = Shoes
+                      | True =>
+                        let tokenname = "Hardened Leather Boots" in let gear_type = Shoes in
+                        NameAndGearType tokenname gear_type
                       | False =>
                         match is_8_18 with
-                        | True => (* This case is Apprentice Staff*)
-                          tokenname = "Apprentice Staff";
-                          gear_type = Weapon
+                        | True =>
+                          let tokenname = "Apprentice Staff" in let gear_type = Weapon in
+                          NameAndGearType tokenname gear_type
                         | False =>
                           match is_9_18 with
-                          | True => (*Hardened Silk Cap*)
-                            tokenname = "Hardened Silk Cap";
-                            gear_type = Helmet
+                          | True =>
+                            let tokenname = "Hardened Silk Cap" in let gear_type = Helmet in
+                            NameAndGearType tokenname gear_type
                           | False =>
                             match is_10_18 with
-                            | True => (* This case is Hardened Silk Robe*)
-                              tokenname = "Hardened Silk Robe";
-                              gear_type = Armor
+                            | True =>
+                              let tokenname = "Hardened Silk Robe" in let gear_type = Armor in
+                              NameAndGearType tokenname gear_type
                             | False =>
                               match is_11_18 with
-                              | True =>(* This case is Hardened Silk Shoes*)
-                                tokenname = "Hardened Silk Shoes";
-                                gear_type = Shoes
+                              | True =>
+                                let tokenname = "Hardened Silk Shoes" in let gear_type = Shoes in
+                                NameAndGearType tokenname gear_type
                               | False =>
                                 match is_12_18 with
-                                | True =>(* This case is Dual Basic Daggers*)
-                                  tokenname = "Dual Basic Daggers";
-                                  gear_type = Weapon
+                                | True =>
+                                  let tokenname = "Dual Basic Daggers" in let gear_type = Weapon in
+                                  NameAndGearType tokenname gear_type
                                 | False =>
                                   match is_13_18 with
-                                  | True =>(* This case is Apprentice Headband*)
-                                    tokenname = "Apprentice Headband";
-                                    gear_type = Helmet
+                                  | True =>
+                                    let tokenname = "Apprentice Headband" in let gear_type = Helmet in
+                                    NameAndGearType tokenname gear_type
                                   | False =>
                                     match is_14_18 with
-                                    | True => (* This case is Apprentice Shirt*)
-                                      tokenname = "Apprentice Shirt";
-                                      gear_type = Armor
+                                    | True =>
+                                      let tokenname = "Apprentice Shirt" in let gear_type = Armor in
+                                      NameAndGearType tokenname gear_type
                                     | False =>
                                       match is_15_18 with
-                                      | True => (* This case is Apprentice Slippers*)
-                                        tokenname = "Apprentice Slippers";
-                                        gear_type = Shoes
+                                      | True =>
+                                        let tokenname = "Apprentice Slippers" in let gear_type = Shoes in
+                                        NameAndGearType tokenname gear_type
                                       | False =>
                                         match is_16_18 with
-                                        | True => (* This case is Bronze Ring*)
-                                          tokenname = "Bronze Ring";
-                                          gear_type = Shoes
-                                        | False => (* This case is Bronze Neclace*)
-                                          tokenname = "Bronze Neclace";
-                                          gear_type = Neclace
+                                        | True =>
+                                          let tokenname = "Bronze Ring" in let gear_type = Shoes in
+                                          NameAndGearType tokenname gear_type
+                                        | False => 
+                                          let tokenname = "Bronze Neclace" in let gear_type = Neclace in
+                                          NameAndGearType tokenname gear_type
                                         end
                                       end
                                     end
@@ -1916,98 +1921,99 @@ procedure MintToken(to: ByStr20, seed: Uint256, is_high_level: Bool)
             end
           end
         end;
-        token_trait = get_token_trait_lv2 gear_type seed tokenname;
-        token_traits[token_id] := token_trait
+        match name_and_type with
+        | NameAndGearType tokenname gear_type =>
+          token_trait = get_token_trait_lv2 gear_type seed tokenname;
+          token_traits[token_id] := token_trait
+        end
       | False => (* This case is 3**)
-        tokenname = "";
-        gear_type = Weapon;
         match is_0_18 with
-        | True => (* This case is Steel Sword*)
-          tokenname = "Steel Sword*";
-          gear_type = Weapon
+        | True =>
+          let tokenname = "Steel Sword*" in let gear_type = Weapon in
+          NameAndGearType tokenname gear_type
         | False =>
           match is_1_18 with
-          | True => (* This case is Steel Helmet*)
-            tokenname = "Steel Helmet";
-            gear_type = Helmet
+          | True =>
+            let tokenname = "Steel Helmet" in let gear_type = Helmet in
+            NameAndGearType tokenname gear_type
           | False =>
             match is_2_18 with
-            | True =>(* This case is Steel Armor*)
-              tokenname = "Steel Armor";
-              gear_type = Armor
+            | True =>
+              let tokenname = "Steel Armor" in let gear_type = Armor in
+              NameAndGearType tokenname gear_type
             | False =>
               match is_3_18 with
-              | True => (* This case is Steel Shoes*)
-                tokenname = "Steel Shoes";
-                gear_type = Shoes
+              | True =>
+                let tokenname = "Steel Shoes" in let gear_type = Shoes in
+                NameAndGearType tokenname gear_type
               | False =>
                 match is_4_18 with
-                | True =>(* This case is Intermediate Archer Bow*)
-                  tokenname = "Intermediate Archer Bow";
-                  gear_type = Weapon
+                | True =>
+                  let tokenname = "Intermediate Archer Bow" in let gear_type = Weapon in
+                  NameAndGearType tokenname gear_type
                 | False =>
                   match is_5_18 with
-                  | True =>(* This case is Light Huntsman Helmet*)
-                    tokenname = "Light Huntsman Helmet";
-                    gear_type = Helmet
+                  | True =>
+                    let tokenname = "Light Huntsman Helmet" in let gear_type = Helmet in
+                    NameAndGearType tokenname gear_type
                   | False =>
                     match is_6_18 with
-                    | True =>(* This case is Light Huntsman Armor*)
-                      tokenname = "Light Huntsman Armor";
-                      gear_type = Armor
+                    | True =>
+                      let tokenname = "Light Huntsman Armor" in let gear_type = Armor in
+                      NameAndGearType tokenname gear_type
                     | False =>
                       match is_7_18 with
-                      | True => (* This case is Light Huntsman Boots*)
-                        tokenname = "Light Huntsman Boots";
-                        gear_type = Shoes
+                      | True =>
+                        let tokenname = "Light Huntsman Boots" in let gear_type = Shoes in
+                        NameAndGearType tokenname gear_type
                       | False =>
                         match is_8_18 with
-                        | True => (* This case is Enchanted Wand*)
-                          tokenname = "Enchanted Wand";
-                          gear_type = Weapon
+                        | True =>
+                          let tokenname = "Enchanted Wand" in let gear_type = Weapon in
+                          NameAndGearType tokenname gear_type
                         | False =>
                           match is_9_18 with
-                          | True => (*Enchanted Silk Cap*)
-                            tokenname = "Enchanted Silk Cap";
-                            gear_type = Helmet
+                          | True =>
+                            let tokenname = "Enchanted Silk Cap" in let gear_type = Helmet in
+                            NameAndGearType tokenname gear_type
                           | False =>
                             match is_10_18 with
-                            | True => (* This case is Enchanted Silk Robe*)
-                              tokenname = "Enchanted Silk Robe";
-                              gear_type = Armor
+                            | True => 
+                              let tokenname = "Enchanted Silk Robe" in let gear_type = Armor in
+                              NameAndGearType tokenname gear_type
                             | False =>
                               match is_11_18 with
-                              | True =>(* This case is Enchanted Silk Shoes*)
-                                tokenname = "Enchanted Silk Shoes";
-                                gear_type = Shoes
+                              | True =>
+                                let tokenname = "Enchanted Silk Shoes" in let gear_type = Shoes in
+                                NameAndGearType tokenname gear_type
                               | False =>
                                 match is_12_18 with
-                                | True =>(* This case is Steel Kusarigama*)
-                                  tokenname = "Steel Kusarigama";
-                                  gear_type = Weapon
+                                | True =>
+                                  let tokenname = "Steel Kusarigama" in let gear_type = Weapon in
+                                  NameAndGearType tokenname gear_type
                                 | False =>
                                   match is_13_18 with
-                                  | True =>(* This case is Black Soft Beanie*)
-                                    tokenname = "Black Soft Beanie";
-                                    gear_type = Helmet
+                                  | True =>
+                                    let tokenname = "Black Soft Beanie" in let gear_type = Helmet in
+                                    NameAndGearType tokenname gear_type
                                   | False =>
                                     match is_14_18 with
-                                    | True => (* This case is Black Soft Hoodie*)
-                                      tokenname = "Black Soft Hoodie";
-                                      gear_type = Armor
+                                    | True =>
+                                      let tokenname = "Black Soft Hoodie" in let gear_type = Armor in
+                                      NameAndGearType tokenname gear_type
                                     | False =>
                                       match is_15_18 with
-                                      | True => (* This case is Black Soft Shoes*)
-                                        tokenname = "Black Soft Shoes";
-                                        gear_type = Shoes
+                                      | True =>
+                                        let tokenname = "Black Soft Shoes" in let gear_type = Shoes in
+                                        NameAndGearType tokenname gear_type
                                       | False =>
                                         match is_16_18 with
-                                        | True => (* This case is Silver Ring*)
-                                          tokenname = "Silver Ring";
-                                          gear_type = Ring
-                                        | False => (* This case is *)
-                                          tokenname = "Silver Necklace";
-                                          gear_type = Neclace
+                                        | True => 
+                                          let tokenname = "Silver Ring" in let gear_type = Ring in
+                                          NameAndGearType tokenname gear_type
+                                        | False => 
+                                          let tokenname = "Silver Necklace" in let gear_type = Neclace in
+                                          NameAndGearType tokenname gear_type
                                         end
                                       end
                                     end
@@ -2025,8 +2031,11 @@ procedure MintToken(to: ByStr20, seed: Uint256, is_high_level: Bool)
             end
           end
         end;
-        token_trait = get_token_trait_lv3 gear_type seed tokenname;
-        token_traits[token_id] := token_trait
+        match name_and_type with
+        | NameAndGearType tokenname gear_type =>
+          token_trait = get_token_trait_lv3 gear_type seed tokenname;
+          token_traits[token_id] := token_trait
+        end
       end
     end
   end
