@@ -1051,15 +1051,9 @@ let get_token_trait_lv5 =
     end
 
 
-
-(***************************************************)
-(*             The contract definition             *)
-(***************************************************)
-
 contract GearNFT
 (
   initial_contract_owner: ByStr20,
-  (* Initial Base URI. e.g. `https://creatures-api.zilliqa.com/api/creature/` *)
   initial_base_uri: String,
   name: String,
   symbol: String
@@ -1067,13 +1061,9 @@ contract GearNFT
 
 (* Contract constraints *)
 with
-  (* `initial_contract_owner` must not be the zero address *)
   let is_contract_owner_invalid = builtin eq initial_contract_owner zero_address in
-  (* `name` must not be an empty string *)
   let is_name_invalid = builtin eq name empty_string in
-  (* `symbol` must not be an empty string *)
   let is_symbol_invalid = builtin eq symbol empty_string in
-  (* Check if any parameter is invalid *)
   let is_name_or_symbol_invalid = orb is_name_invalid is_symbol_invalid in
 
   let is_invalid = orb is_contract_owner_invalid is_name_or_symbol_invalid in
@@ -1081,87 +1071,36 @@ with
 =>
 
 (* Mutable fields *)
-
-(* Emergency stop mechanism *)
-(* Defaults to False *)
 field is_paused: Bool = false
-
-(* Token Name *)
-(* Defaults to `name` *)
-(* No need to mutate this field since this is for remote fetch to retrieve the immutable parameter. *)
 field token_name: String = name
-
-(* Token Symbol *)
-(* Defaults to `symbol` *)
-(* No need to mutate this field since this is for remote fetch to retrieve the immutable parameter. *)
 field token_symbol: String = symbol
-
-(* Contract Owner *)
-(* Defaults to `initial_contract_owner` *)
 field contract_owner: ByStr20 = initial_contract_owner
-
-(* Contract ownership recipient *)
-(* Defaults to `zero_address` *)
 field contract_ownership_recipient: ByStr20 = zero_address
-
-(* Address to send royalties to *)
-(* Defaults to `initial_contract_owner` *)
 field royalty_recipient: ByStr20 = initial_contract_owner
-
-(* Royalty fee BPS *)
-(* e.g. 1 = 0.01%, 10000 = 100% *)
-(* Defaults to 1000 *)
 field royalty_fee_bps: Uint128 = Uint128 1000
-
-(* Base URI *)
-(* Defaults to `initial_base_uri` *)
 field base_uri: String = initial_base_uri
-
-(* Token URIs *)
 field token_uris: Map Uint256 String = Emp Uint256 String
-
-(* Mapping from token ID to its owner *)
 field token_owners: Map Uint256 ByStr20 = Emp Uint256 ByStr20
-
-(* Mappint from token ID to its traits such as name, grade level, unit type etc... *)
 field token_traits: Map Uint256 HeroesTrait = Emp Uint256 HeroesTrait
-
-(* The total number of tokens minted *)
 field token_id_count: Uint256 = Uint256 0
-
-(* The total number of existing tokens *)
 field total_supply: Uint256 = Uint256 0
-
-(* Mapping from token owner to the number of existing tokens *)
 field balances: Map ByStr20 Uint256 = Emp ByStr20 Uint256
-
-(* Set for minters *)
-(* `initial_contract_owner` is a minter by default *)
 field minters: Map ByStr20 Bool =
     let emp_map = Emp ByStr20 Bool in
     builtin put emp_map initial_contract_owner true
-
-(* Mapping from token ID to a spender *)
 field spenders: Map Uint256 ByStr20 = Emp Uint256 ByStr20
-
-(* Mapping from token owner to operators authorized by the token owner *)
 field operators: Map ByStr20 (Map ByStr20 Bool) = Emp ByStr20 (Map ByStr20 Bool)
 
-
-(* Emit Errors *)
 procedure Throw(error: Error)
   e = make_error error;
   throw e
 end
 
 procedure RequireNotPaused()
-  (* Reference: *)
-  (* https://consensys.github.io/smart-contract-best-practices/general_philosophy/#prepare-for-failure *)
   paused <- is_paused;
   match paused with
   | False =>
   | True =>
-    (* Contract is paused *)
     error = PausedError;
     Throw error
   end
@@ -1212,7 +1151,6 @@ procedure RequireExistingToken(token_id: Uint256)
 end
 
 procedure RequireValidDestination(to: ByStr20)
-  (* Reference: https://github.com/ConsenSys/smart-contract-best-practices/blob/master/docs/tokens.md *)
   is_zero_address = builtin eq to zero_address;
   match is_zero_address with
   | False =>
@@ -1270,18 +1208,13 @@ procedure RequireOwnerOrOperator(address: ByStr20)
 end
 
 procedure RequireAccessToTransfer(token_owner: ByStr20, token_id: Uint256)
-  (* check if _sender is token owner *)
   is_token_owner = builtin eq token_owner _sender;
-
-  (* check if _sender is spender *)
   maybe_spender <- spenders[token_id];
   is_spender = match maybe_spender with
     | None => False
     | Some spender =>
       builtin eq spender _sender
     end;
-
-  (* check if _sender is operator *)
   is_operator <- exists operators[token_owner][_sender];
 
   is_spender_or_operator = orb is_spender is_operator;
@@ -1300,46 +1233,35 @@ procedure UpdateBalance(operation: Operation, address: ByStr20)
     maybe_count <- balances[address];
     new_count =
       let cur_count = get_bal maybe_count in
-      (* if overflow occurs, it throws CALL_CONTRACT_FAILED *)
       builtin add cur_count one;
     balances[address] := new_count
   | Sub =>
     maybe_count <- balances[address];
     new_count =
       let cur_count = get_bal maybe_count in
-      (* if underflow occurs, it throws CALL_CONTRACT_FAILED *)
       builtin sub cur_count one;
     balances[address] := new_count
   end
 end
 
-(* @Requirements: *)
-(* - `to` must not be the zero address. Otherwise, it must throw `ZeroAddressDestinationError` *)
-(* - `to` must not be `_this_address`. Otherwise, it must throw `ThisAddressDestinationError` *)
-(* - `_sender` must be a minter. Otherwise, it must throw `NotMinterError` *)
 procedure MintToken(to: ByStr20, seed: Uint256, is_high_level: Bool)
   RequireValidDestination to;
 
   IsMinter _sender;
 
-  (* generate ID *)
   current_token_id_count <- token_id_count;
   new_token_id_count = builtin add current_token_id_count one;
   token_id_count := new_token_id_count;
   token_id = new_token_id_count;
 
-  (* mint a new token *)
   token_owners[token_id] := to;
 
-  (* add one to the token owner balance *)
   UpdateBalance add_operation to;
 
-  (* add one to the total supply *)
   current_supply <- total_supply;
   new_supply = builtin add current_supply one;
   total_supply := new_supply;
 
-  (* create nft traits according to the seed *)
   restHundred = builtin rem seed hundred;
   is_less_than_80 = builtin lt restHundred eighty;
   is_less_than_98 = builtin lt restHundred ninety_eight;
@@ -1817,7 +1739,7 @@ procedure MintToken(to: ByStr20, seed: Uint256, is_high_level: Bool)
     | False =>
       match is_less_than_95 with
       | True => (* This case is 2**)
-        match is_0_18 with
+        name_and_type = match is_0_18 with
         | True =>
           let tokenname = "Stone Sword*" in let gear_type = Weapon in
           NameAndGearType tokenname gear_type
@@ -1927,7 +1849,7 @@ procedure MintToken(to: ByStr20, seed: Uint256, is_high_level: Bool)
           token_traits[token_id] := token_trait
         end
       | False => (* This case is 3**)
-        match is_0_18 with
+        name_and_type = match is_0_18 with
         | True =>
           let tokenname = "Steel Sword*" in let gear_type = Weapon in
           NameAndGearType tokenname gear_type
@@ -2060,9 +1982,6 @@ procedure HandleMint(info: BatchParam)
   end
 end
 
-(* @Requirements: *)
-(* - `token_id` must exist. Otherwise, it must throw `TokenNotFoundError` *)
-(* - `_sender` must be a token owner or an operator. Otherwise, it must throw `NotOwnerOrOperatorError` *)
 procedure BurnToken(token_id: Uint256)
   (* Check if token exists *)
   maybe_token_owner <- token_owners[token_id];
@@ -2093,12 +2012,6 @@ procedure BurnToken(token_id: Uint256)
   end
 end
 
-(* @Requirements: *)
-(* - `to` must not be the zero address. Otherwise, it must throw `ZeroAddressDestinationError` *)
-(* - `to` must not be `_this_address`. Otherwise, it must throw `ThisAddressDestinationError` *)
-(* - `token_id` must exist. Otherwise, it must throw `TokenNotFoundError` *)
-(* - `_sender` must be a token owner, spender, or operator. Otherwise, it must throw `NotAllowedToTransferError` *)
-(* - `_sender` must not be `to`. Otherwise, it must throw `SelfError` *)
 procedure TransferToken(to: ByStr20, token_id: Uint256)
   RequireValidDestination to;
 
@@ -2111,14 +2024,12 @@ procedure TransferToken(to: ByStr20, token_id: Uint256)
     RequireAccessToTransfer token_owner token_id;
     RequireNotSelf token_owner to;
 
-    (* change token_owner for that token_id *)
     token_owners[token_id] := to;
 
     delete spenders[token_id];
 
-    (* subtract one from previous token owner balance *)
     UpdateBalance sub_operation token_owner;
-    (* add one to the new token owner balance *)
+
     UpdateBalance add_operation to;
 
     e = {
@@ -2138,10 +2049,6 @@ procedure HandleTransfer(info: Pair ByStr20 Uint256)
   end
 end
 
-(* Pauses the contract. Use this when things are going wrong ('circuit breaker'). *)
-(* @Requirements: *)
-(* - The contract must not be paused. Otherwise, it must throw `PausedError` *)
-(* - `_sender` must be the contract owner. Otherwise, it must throw `NotContractOwnerError` *)
 transition Pause()
   RequireNotPaused;
   RequireContractOwner;
@@ -2162,10 +2069,6 @@ transition Pause()
   send msgs
 end
 
-(* Unpauses the contract. *)
-(* @Requirements: *)
-(* - The contract must be paused. Otherwise, it must throw `NotPausedError` *)
-(* - `_sender` must be the contract owner. Otherwise, it must throw `NotContractOwnerError` *)
 transition Unpause()
   paused <- is_paused;
   match paused with
@@ -2192,12 +2095,6 @@ transition Unpause()
   send msgs
 end
 
-(* Sets `to` as the royalty recipient. *)
-(* @param: to - Royalty recipient address  *)
-(* @Requirements: *)
-(* - `_sender` must be the contract owner. Otherwise, it must throw `NotContractOwnerError` *)
-(* - `to` must not be the zero address. Otherwise, it must throw `ZeroAddressDestinationError` *)
-(* - `to` must not be `_this_address`. Otherwise, it must throw `ThisAddressDestinationError` *)
 transition SetRoyaltyRecipient(to: ByStr20)
   RequireContractOwner;
   RequireValidDestination to;
@@ -2219,11 +2116,6 @@ transition SetRoyaltyRecipient(to: ByStr20)
   send msgs
 end
 
-(* Sets `fee_bps` as royalty fee bps. *)
-(* @param: fee_bps - Royalty fee BPS *)
-(* @Requirements: *)
-(* - `_sender` must be the contract owner. Otherwise, it must throw `NotContractOwnerError` *)
-(* - `fee_bps` must be in the range of 1 and 10000. Otherwise, it must throw `InvalidFeeBPSError` *)
 transition SetRoyaltyFeeBPS(fee_bps: Uint128)
   RequireContractOwner;
   RequireValidRoyaltyFee fee_bps;
@@ -2244,9 +2136,6 @@ transition SetRoyaltyFeeBPS(fee_bps: Uint128)
   send msgs
 end
 
-(* Sets `uri` as the base URI. *)
-(* @Requirements: *)
-(* - `_sender` must be the contract owner. Otherwise, it must throw `NotContractOwnerError` *)
 transition SetBaseURI(uri: String)
   RequireContractOwner;
   base_uri := uri;
@@ -2266,13 +2155,6 @@ transition SetBaseURI(uri: String)
   send msgs
 end
 
-(* Mints a token with a specific `token_uri` and transfers it to `to`. *)
-(* Pass empty string to `token_uri` to use the concatenated token URI. i.e. `<base_uri><token_id>`. *)
-(* @param: to - Address of the token recipient *)
-(* @param: token_uri - URI of a token *)
-(* @param: seed - random seed which will be used to determine token traits *)
-(* @Requirements: *)
-(* - The contract must not be paused. Otherwise, it must throw `PausedError` *)
 transition Mint(to: ByStr20, token_uri: String, seed: Uint256, is_high_level: Bool)
   RequireNotPaused;
   MintToken to seed is_high_level;
@@ -2303,11 +2185,6 @@ transition Mint(to: ByStr20, token_uri: String, seed: Uint256, is_high_level: Bo
   send msgs
 end
 
-(* Mints multiple tokens with `token_uri`s and transfers them to multiple `to`s. *)
-(* Pass empty string to `token_uri` to use the concatenated token URI. i.e. `<base_uri><token_id>`. *)
-(* @param: to_token_uri_pair_list - List of Pair (to, token_uri). *)
-(* @Requirements: *)
-(* - The contract must not be paused. Otherwise, it must throw `PausedError` *)
 transition BatchMint(to: ByStr20, seeds: List (Uint256), is_high_level: Bool)
   RequireNotPaused;
   cur_id <- token_id_count;
@@ -2331,13 +2208,8 @@ transition BatchMint(to: ByStr20, seeds: List (Uint256), is_high_level: Bool)
   send msgs
 end
 
-(* Destroys `token_id`. *)
-(* @param: token_id - Unique ID of the NFT to be destroyed *)
-(* @Requirements: *)
-(* - The contract must not be paused. Otherwise, it must throw `PausedError` *)
 transition Burn(token_id: Uint256)
   RequireNotPaused;
-  (* Check if token exists *)
   maybe_token_owner <- token_owners[token_id];
   match maybe_token_owner with
   | None =>
@@ -2357,10 +2229,6 @@ transition Burn(token_id: Uint256)
   end
 end
 
-(* Destroys `token_id_list`. *)
-(* @param: token_id_list - List of unique IDs of the NFT to be destroyed *)
-(* @Requirements: *)
-(* - The contract must not be paused. Otherwise, it must throw `PausedError` *)
 transition BatchBurn(token_id_list: List Uint256)
   RequireNotPaused;
   forall token_id_list BurnToken;
@@ -2373,10 +2241,6 @@ transition BatchBurn(token_id_list: List Uint256)
   send msgs
 end
 
-(* Adds `minter`. *)
-(* @Requirements: *)
-(* - `_sender` must be the contract owner. Otherwise, it must throw `NotContractOwnerError` *)
-(* - `minter` must not be already a minter. Otherwise, it must throw `MinterFoundError` *)
 transition AddMinter(minter: ByStr20)
   RequireContractOwner;
   has_minter <- exists minters[minter];
@@ -2385,7 +2249,6 @@ transition AddMinter(minter: ByStr20)
     error = MinterFoundError;
     Throw error
   | False =>
-    (* Add minter *)
     minters[minter] := true
   end;
   e = {
@@ -2403,10 +2266,6 @@ transition AddMinter(minter: ByStr20)
   send msgs
 end
 
-(* Removes `minter`. *)
-(* @Requirements: *)
-(* - `_sender` must be the contract owner. Otherwise, it must throw `NotContractOwnerError` *)
-(* - `minter` must be already a minter. Otherwise, it must throw `MinterNotFoundError` *)
 transition RemoveMinter(minter: ByStr20)
   RequireContractOwner;
   has_minter <- exists minters[minter];
@@ -2432,14 +2291,6 @@ transition RemoveMinter(minter: ByStr20)
   send msgs
 end
 
-(* Sets `spender` for `token_id`. *)
-(* To remove `spender` for a token, use `zero_address`. *)
-(* i.e., `0x0000000000000000000000000000000000000000` *)
-(* @Requirements: *)
-(* - `token_id` must exist. Otherwise, it must throw `TokenNotFoundError` *)
-(* - `_sender` must be a token owner or an operator. Otherwise, it must throw `NotOwnerOrOperatorError` *)
-(* - `_sender` must not be `spender`. Otherwise, it must throw `SelfError` *)
-(* - `spender` must not be already a spender. Otherwise, it must throw `SpenderFoundError` *)
 transition SetSpender(spender: ByStr20, token_id: Uint256)
   RequireNotSelf spender _sender;
 
@@ -2451,7 +2302,6 @@ transition SetSpender(spender: ByStr20, token_id: Uint256)
   | Some token_owner =>
     RequireOwnerOrOperator token_owner;
 
-    (* Check if the spender exists *)
     maybe_spender <- spenders[token_id];
     match maybe_spender with
       | None =>
@@ -2486,11 +2336,6 @@ transition SetSpender(spender: ByStr20, token_id: Uint256)
   end
 end
 
-(* Adds `operator` for `_sender`. *)
-(* @Requirements: *)
-(* - `_sender` must be the token owner. Otherwise, it must throw `NotTokenOwnerError` *)
-(* - `_sender` must not be `operator`. Otherwise, it must throw `SelfError` *)
-(* - `operator` must not be already an operator. Otherwise, it must throw `OperatorFoundError` *)
 transition AddOperator(operator: ByStr20)
   RequireNotSelf operator _sender;
 
@@ -2498,7 +2343,7 @@ transition AddOperator(operator: ByStr20)
   balance = get_bal maybe_bal;
 
   is_balance_zero = builtin eq zero balance;
-  (* _sender must have at least 1 token *)
+
   match is_balance_zero with
   | True =>
     error = NotTokenOwnerError;
@@ -2507,7 +2352,6 @@ transition AddOperator(operator: ByStr20)
     has_operator <- exists operators[_sender][operator];
     match has_operator with
     | False =>
-      (* Add operator *)
       operators[_sender][operator] := true
     | True =>
       error = OperatorFoundError;
@@ -2530,9 +2374,6 @@ transition AddOperator(operator: ByStr20)
   end
 end
 
-(* Removes `operator` for `_sender`. *)
-(* @Requirements:  *)
-(* - `operator` must be already an operator of `_sender`. Otherwise, it must throw `OperatorNotFoundError` *)
 transition RemoveOperator(operator: ByStr20)
   has_operator <- exists operators[_sender][operator];
   match has_operator with
@@ -2540,7 +2381,6 @@ transition RemoveOperator(operator: ByStr20)
     error = OperatorNotFoundError;
     Throw error
   | True =>
-    (* Remove operator *)
     delete operators[_sender][operator]
   end;
   e = {
@@ -2559,9 +2399,6 @@ transition RemoveOperator(operator: ByStr20)
   send msgs
 end
 
-(* Transfers `token_id` from the token owner to `to`.  *)
-(* @Requirements: *)
-(* - The contract must not be paused. Otherwise, it must throw `PausedError` *)
 transition TransferFrom(to: ByStr20, token_id: Uint256)
   RequireNotPaused;
   maybe_token_owner <- token_owners[token_id];
@@ -2592,10 +2429,6 @@ transition TransferFrom(to: ByStr20, token_id: Uint256)
   end
 end
 
-(* Transfers multiple `token_id` to multiple `to`. *)
-(* @param: to_token_id_pair_list - List of Pair (to, token_id). *)
-(* @Requirements: *)
-(* - The contract must not be paused. Otherwise, it must throw `PausedError` *)
 transition BatchTransferFrom(to_token_id_pair_list: List (Pair ByStr20 Uint256))
   RequireNotPaused;
   forall to_token_id_pair_list HandleTransfer;
@@ -2608,13 +2441,6 @@ transition BatchTransferFrom(to_token_id_pair_list: List (Pair ByStr20 Uint256))
   send msgs
 end
 
-(* Sets `to` as the contract ownership recipient. *)
-(* To reset `contract_ownership_recipient`, use `zero_address`. *)
-(* i.e., `0x0000000000000000000000000000000000000000` *)
-(* @param: to - Address of contract ownership recipient *)
-(* @Requirements: *)
-(* - `_sender` must be the contract owner. Otherwise, it must throw `NotContractOwnerError` *)
-(* - `_sender` must not be `to`. Otherwise, it must throw `SelfError` *)
 transition SetContractOwnershipRecipient(to: ByStr20)
   RequireContractOwner;
   RequireNotSelf to _sender;
@@ -2636,9 +2462,6 @@ transition SetContractOwnershipRecipient(to: ByStr20)
   send msgs
 end
 
-(* Sets `contract_ownership_recipient` as the contract owner. *)
-(* @Requirements: *)
-(* - `_sender` must be the contract ownership recipient. Otherwise, it must throw `NotContractOwnershipRecipientError` *)
 transition AcceptContractOwnership()
   recipient <- contract_ownership_recipient;
 

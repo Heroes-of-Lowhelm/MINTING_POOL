@@ -319,3 +319,5 @@ If randomNumber % 3 == 2 then it's Mia
 
   ** Call AddMinter(minter: ByStr20) transition with the Minting Contract address to allow for it to Mint tokens
 - Run Oracle Client
+
+
