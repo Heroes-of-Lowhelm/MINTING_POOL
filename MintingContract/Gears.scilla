@@ -24,6 +24,7 @@ let zero_address = 0x0000000000000000000000000000000000000000
 let false = False
 let true = True
 let zero = Uint256 0
+let one = Uint256 1
 let empty_string = ""
 
 let add_operation = Add
@@ -181,6 +182,9 @@ field base_uri: String = initial_base_uri
 
 (* Token URIs *)
 field token_uris: Map Uint256 String = Emp Uint256 String
+
+(* GearNFT address *)
+field gear_trait_addr: ByStr20 = zero_address
 
 (* Mapping from token ID to its owner *)
 field token_owners: Map Uint256 ByStr20 = Emp Uint256 ByStr20
@@ -402,7 +406,10 @@ procedure MintToken(to: ByStr20, seed: Uint256, is_high_level: Bool)
   total_supply := new_supply;
 
   (* create nft traits according to the seed *)
-
+  gear_trait_addr_tmp <- gear_trait_addr;
+  msg = {_tag: "GenerateTrait"; _recipient: gear_trait_addr_tmp; _amount: Uint128 0; token_id: token_id; seed: seed; is_high_level: is_high_level};
+  msgs = one_msg msg;
+  send msgs
 end
 
 procedure SetTokenURI(token_id: Uint256, token_uri: String)
@@ -1029,4 +1036,13 @@ transition AcceptContractOwnership()
     msgs = one_msg msg_to_sender;
     send msgs
   end
+end
+
+transition TokenTraitCallback(token_id: Uint256, tokenname: String, token_level: String, mainstat: String, substats: List(String))
+  token_trait = HeroesTrait tokenname token_level mainstat substats;
+  token_traits[token_id] := token_trait
+end
+
+transition SetTraitAddr(trait_addr: ByStr20)
+  gear_trait_addr := trait_addr
 end
