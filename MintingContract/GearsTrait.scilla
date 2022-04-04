@@ -1171,7 +1171,20 @@ transition GenerateTrait(token_id: Uint256, seed: Uint256, is_high_level: Bool)
       end;
       match name_and_type with
       | NameAndGearType tokenname gear_type =>
-      token_trait = get_token_trait_lv3 gear_type seed tokenname;
+        token_trait = get_token_trait_lv3 gear_type seed tokenname;
+        match token_trait with
+        | HeroesTrait tokenname token_level mainstat substats =>
+            msg = {
+                _tag: "TokenTraitCallback";
+                _recipient: _sender;
+                _amount: Uint128 0;
+                token_id: token_id;
+                tokenname: tokenname;
+                token_level: token_level;
+                mainstat: mainstat;
+                substats: substats
+            }
+        end
       end
     | False =>
       match is_less_than_98 with
@@ -1282,7 +1295,20 @@ transition GenerateTrait(token_id: Uint256, seed: Uint256, is_high_level: Bool)
         end;
         match name_and_type with
         | NameAndGearType tokenname gear_type =>
-          token_trait = get_token_trait_lv4 gear_type seed tokenname;
+            token_trait = get_token_trait_lv4 gear_type seed tokenname;
+            match token_trait with
+            | HeroesTrait tokenname token_level mainstat substats =>
+                msg = {
+                    _tag: "TokenTraitCallback";
+                    _recipient: _sender;
+                    _amount: Uint128 0;
+                    token_id: token_id;
+                    tokenname: tokenname;
+                    token_level: token_level;
+                    mainstat: mainstat;
+                    substats: substats
+                }
+            end
         end
       | False =>
         name_and_type = match is_0_18 with
@@ -1391,7 +1417,20 @@ transition GenerateTrait(token_id: Uint256, seed: Uint256, is_high_level: Bool)
         end;
         match name_and_type with
         | NameAndGearType tokenname gear_type =>
-          token_trait = get_token_trait_lv5 gear_type seed tokenname;
+            token_trait = get_token_trait_lv5 gear_type seed tokenname;
+            match token_trait with
+            | HeroesTrait tokenname token_level mainstat substats =>
+                msg = {
+                    _tag: "TokenTraitCallback";
+                    _recipient: _sender;
+                    _amount: Uint128 0;
+                    token_id: token_id;
+                    tokenname: tokenname;
+                    token_level: token_level;
+                    mainstat: mainstat;
+                    substats: substats
+                }
+            end
         end
       end
     end
@@ -1504,7 +1543,20 @@ transition GenerateTrait(token_id: Uint256, seed: Uint256, is_high_level: Bool)
       end;
       match name_and_type with
       | NameAndGearType tokenname gear_type =>
-      token_trait = get_token_trait_lv1 gear_type seed tokenname;
+        token_trait = get_token_trait_lv1 gear_type seed tokenname;
+        match token_trait with
+        | HeroesTrait tokenname token_level mainstat substats =>
+            msg = {
+                _tag: "TokenTraitCallback";
+                _recipient: _sender;
+                _amount: Uint128 0;
+                token_id: token_id;
+                tokenname: tokenname;
+                token_level: token_level;
+                mainstat: mainstat;
+                substats: substats
+            }
+        end
       end
     | False =>
       match is_less_than_95 with
@@ -1615,7 +1667,20 @@ transition GenerateTrait(token_id: Uint256, seed: Uint256, is_high_level: Bool)
         end;
         match name_and_type with
         | NameAndGearType tokenname gear_type =>
-          token_trait = get_token_trait_lv2 gear_type seed tokenname;
+            token_trait = get_token_trait_lv2 gear_type seed tokenname;
+            match token_trait with
+            | HeroesTrait tokenname token_level mainstat substats =>
+                msg = {
+                    _tag: "TokenTraitCallback";
+                    _recipient: _sender;
+                    _amount: Uint128 0;
+                    token_id: token_id;
+                    tokenname: tokenname;
+                    token_level: token_level;
+                    mainstat: mainstat;
+                    substats: substats
+                }
+            end
         end
       | False => (* This case is 3**)
         name_and_type = match is_0_18 with
@@ -1724,7 +1789,20 @@ transition GenerateTrait(token_id: Uint256, seed: Uint256, is_high_level: Bool)
         end;
         match name_and_type with
         | NameAndGearType tokenname gear_type =>
-          token_trait = get_token_trait_lv3 gear_type seed tokenname;
+            token_trait = get_token_trait_lv3 gear_type seed tokenname;
+            match token_trait with
+            | HeroesTrait tokenname token_level mainstat substats =>
+                msg = {
+                    _tag: "TokenTraitCallback";
+                    _recipient: _sender;
+                    _amount: Uint128 0;
+                    token_id: token_id;
+                    tokenname: tokenname;
+                    token_level: token_level;
+                    mainstat: mainstat;
+                    substats: substats
+                }
+            end
         end
       end
     end
