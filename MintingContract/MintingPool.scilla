@@ -27,6 +27,7 @@ type Error =
 | CodeIsCallerAddressNotSet
 | CodeIsBatchPendingRequest
 | CodeIsDLNFTContractAddressNotSet
+| CodeIsSameBlock
 
 let make_error =
     fun (result : Error) =>
@@ -40,6 +41,7 @@ let make_error =
         | CodeIsCallerAddressNotSet => Int32 -6
         | CodeIsBatchPendingRequest => Int32 -7
         | CodeIsDLNFTContractAddressNotSet => Int32 -8
+        | CodeIsSameBlock => Int32 -9
         end
         in
         { _exception : "Error"; code : result_code }
@@ -84,7 +86,8 @@ field processedH35BatchCallerCount: Uint256 = Uint256 0
 field callerH35Addresses: Map Uint256 ByStr20 = Emp Uint256 ByStr20
 (* Mapping for caller Address id to caller address *)
 field batchCallerH35Addresses: Map Uint256 ByStr20 = Emp Uint256 ByStr20
-
+(* Mapping for caller Address to BlockNumber *)
+field caller_block_num: Map ByStr20 BNum = Emp ByStr20 BNum
 
 
 
@@ -134,6 +137,20 @@ procedure ThrowError(error: Error)
 end
 
 
+procedure IsSameBlock(blk: BNum)
+    last_blk <- caller_block_num[_sender];
+    match last_blk with
+    | Some v =>
+        is_allowed = builtin blt v blk;
+        match is_allowed with
+        | False =>
+            err = CodeIsSameBlock;
+            ThrowError err
+        | True =>
+        end
+    | None =>
+    end
+end
 
 
 procedure IsNotOracle(address: ByStr20)
@@ -295,12 +312,16 @@ end
 
 (* @dev: Transition for users to Mint 1*-3* Heroes.This transition invokes requestRandomNumber() transition in the oracle contract   *)
 transition Mint13Heroes()
+    blk <- & BLOCKNUMBER;
+    IsSameBlock blk;
     oracleAddressTmp <- oracleAddress;
     heroesNFTAddressTmp <- heroesNFTAddress;
     match oracleAddressTmp with
     | Some v =>
         match heroesNFTAddressTmp with
         | Some heroesValue =>
+            blk_cur <- & BLOCKNUMBER;
+            caller_block_num[_sender] := blk_cur;
             msg = {_tag: "requestH13RandomNumber"; _recipient: v; _amount: zero};
             msgs = one_msg msg;
             send msgs;
@@ -320,12 +341,16 @@ end
 
 (* @dev: Transition for users to Mint 1*-3* Gears.This transition invokes requestG13RandomNumber() transition in the oracle contract   *)
 transition Mint13Gears()
+    blk <- & BLOCKNUMBER;
+    IsSameBlock blk;
     oracleAddressTmp <- oracleAddress;
     gearsNFTAddressTmp <- gearsNFTAddress;
     match oracleAddressTmp with
     | Some v =>
         match gearsNFTAddressTmp with
         | Some gearsValue =>
+            blk_cur <- & BLOCKNUMBER;
+            caller_block_num[_sender] := blk_cur;
             msg = {_tag: "requestG13RandomNumber"; _recipient: v; _amount: zero};
             msgs = one_msg msg;
             send msgs;
@@ -345,12 +370,16 @@ end
 
 (* @dev: Transition for users to Mint 3*-5* Heroes.This transition invokes requestRandomNumber() transition in the oracle contract   *)
 transition Mint35Heroes()
+    blk <- & BLOCKNUMBER;
+    IsSameBlock blk;
     oracleAddressTmp <- oracleAddress;
     heroesNFTAddressTmp <- heroesNFTAddress;
     match oracleAddressTmp with
     | Some v =>
         match heroesNFTAddressTmp with
         | Some heroesValue =>
+            blk_cur <- & BLOCKNUMBER;
+            caller_block_num[_sender] := blk_cur;
             msg = {_tag: "requestH35RandomNumber"; _recipient: v; _amount: zero};
             msgs = one_msg msg;
             send msgs;
@@ -370,12 +399,16 @@ end
 
 (* @dev: Transition for users to Mint 3*-5* Heroes.This transition invokes requestRandomNumber() transition in the oracle contract   *)
 transition Mint35Gears()
+    blk <- & BLOCKNUMBER;
+    IsSameBlock blk;
     oracleAddressTmp <- oracleAddress;
     gearsNFTAddressTmp <- gearsNFTAddress;
     match oracleAddressTmp with
     | Some v =>
         match gearsNFTAddressTmp with
         | Some gearsValue =>
+            blk_cur <- & BLOCKNUMBER;
+            caller_block_num[_sender] := blk_cur;
             msg = {_tag: "requestG35RandomNumber"; _recipient: v; _amount: zero};
             msgs = one_msg msg;
             send msgs;
@@ -395,12 +428,16 @@ end
 
 (* @dev: Transition for users to Mint Dark/Light Heroes.This transition invokes requestRandomNumber() transition in the oracle contract   *)
 transition MintDLHeroes()
+    blk <- & BLOCKNUMBER;
+    IsSameBlock blk;
     oracleAddressTmp <- oracleAddress;
     dlHeroesNFTAddressTmp <- dlHeroesNFTAddress;
     match oracleAddressTmp with
     | Some v =>
         match dlHeroesNFTAddressTmp with
         | Some dlHeroesAddress =>
+            blk_cur <- & BLOCKNUMBER;
+            caller_block_num[_sender] := blk_cur;
             msg = {_tag: "requestHDLRandomNumber"; _recipient: v; _amount: zero};
             msgs = one_msg msg;
             send msgs;
@@ -421,12 +458,16 @@ end
 
 (* @dev: Transition for users to Batch Mint 1*-3* Heroes.This transition invokes requestBatchRandomNumber() transition in the oracle contract   *)
 transition BatchMint13Heroes()
+    blk <- & BLOCKNUMBER;
+    IsSameBlock blk;
     oracleAddressTmp <- oracleAddress;
     heroesNFTAddressTmp <- heroesNFTAddress;
     match oracleAddressTmp with
     | Some v =>
         match heroesNFTAddressTmp with
         | Some heroesValue =>
+            blk_cur <- & BLOCKNUMBER;
+            caller_block_num[_sender] := blk_cur;
             msg = {_tag: "requestH13BatchRandomNumber"; _recipient: v; _amount: zero};
             msgs = one_msg msg;
             send msgs;
@@ -446,12 +487,16 @@ end
 
 (* @dev: Transition for users to Batch Mint 1*-3* Heroes.This transition invokes requestBatchRandomNumber() transition in the oracle contract   *)
 transition BatchMint13Gears()
+    blk <- & BLOCKNUMBER;
+    IsSameBlock blk;
     oracleAddressTmp <- oracleAddress;
     gearsNFTAddressTmp <- gearsNFTAddress;
     match oracleAddressTmp with
     | Some v =>
         match gearsNFTAddressTmp with
         | Some gearsValue =>
+            blk_cur <- & BLOCKNUMBER;
+            caller_block_num[_sender] := blk_cur;
             msg = {_tag: "requestG13BatchRandomNumber"; _recipient: v; _amount: zero};
             msgs = one_msg msg;
             send msgs;
@@ -471,12 +516,16 @@ end
 
 (* @dev: Transition for users to Batch Mint 3*-5* Heroes.This transition invokes requestBatchRandomNumber() transition in the oracle contract   *)
 transition BatchMint35Heroes()
+    blk <- & BLOCKNUMBER;
+    IsSameBlock blk;
     oracleAddressTmp <- oracleAddress;
     heroesNFTAddressTmp <- heroesNFTAddress;
     match oracleAddressTmp with
     | Some v =>
         match heroesNFTAddressTmp with
         | Some heroesValue =>
+            blk_cur <- & BLOCKNUMBER;
+            caller_block_num[_sender] := blk_cur;
             msg = {_tag: "requestH35BatchRandomNumber"; _recipient: v; _amount: zero};
             msgs = one_msg msg;
             send msgs;
@@ -496,12 +545,16 @@ end
 
 (* @dev: Transition for users to Batch Mint 3*-5* Gears.This transition invokes requestBatchRandomNumber() transition in the oracle contract   *)
 transition BatchMint35Gears()
+    blk <- & BLOCKNUMBER;
+    IsSameBlock blk;
     oracleAddressTmp <- oracleAddress;
     gerasNFTAddressTmp <- gearsNFTAddress;
     match oracleAddressTmp with
     | Some v =>
         match gerasNFTAddressTmp with
         | Some gearsValue =>
+            blk_cur <- & BLOCKNUMBER;
+            caller_block_num[_sender] := blk_cur;
             msg = {_tag: "requestG35BatchRandomNumber"; _recipient: v; _amount: zero};
             msgs = one_msg msg;
             send msgs;
