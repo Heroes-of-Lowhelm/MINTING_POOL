@@ -1183,7 +1183,9 @@ transition GenerateTrait(token_id: Uint256, seed: Uint256, is_high_level: Bool)
                 token_level: token_level;
                 mainstat: mainstat;
                 substats: substats
-            }
+            };
+            msgs = one_msg msg;
+            send msgs
         end
       end
     | False =>
@@ -1307,7 +1309,9 @@ transition GenerateTrait(token_id: Uint256, seed: Uint256, is_high_level: Bool)
                     token_level: token_level;
                     mainstat: mainstat;
                     substats: substats
-                }
+                };
+                msgs = one_msg msg;
+                send msgs
             end
         end
       | False =>
@@ -1429,7 +1433,9 @@ transition GenerateTrait(token_id: Uint256, seed: Uint256, is_high_level: Bool)
                     token_level: token_level;
                     mainstat: mainstat;
                     substats: substats
-                }
+                };
+                msgs = one_msg msg;
+                send msgs
             end
         end
       end
@@ -1555,7 +1561,9 @@ transition GenerateTrait(token_id: Uint256, seed: Uint256, is_high_level: Bool)
                 token_level: token_level;
                 mainstat: mainstat;
                 substats: substats
-            }
+            };
+            msgs = one_msg msg;
+            send msgs
         end
       end
     | False =>
@@ -1679,7 +1687,9 @@ transition GenerateTrait(token_id: Uint256, seed: Uint256, is_high_level: Bool)
                     token_level: token_level;
                     mainstat: mainstat;
                     substats: substats
-                }
+                };
+                msgs = one_msg msg;
+                send msgs
             end
         end
       | False => (* This case is 3**)
@@ -1801,7 +1811,9 @@ transition GenerateTrait(token_id: Uint256, seed: Uint256, is_high_level: Bool)
                     token_level: token_level;
                     mainstat: mainstat;
                     substats: substats
-                }
+                };
+                msgs = one_msg msg;
+                send msgs
             end
         end
       end
