@@ -309,16 +309,15 @@ async function processH13BatchRequest (id, callerAddress) {
     while (retries < MAX_RETRIES) {
         try {
             let randomNumbers = [];
-            let randomNumber = await getRandom();
-            // 70 ~ 95 random number
-            let rangedRand = 70 + Math.floor(Math.random() * 25);
-            let firstRand = randomNumber + rangedRand;
-            randomNumbers.push(firstRand);
+            // 95 ~ 99 random number
             for(let i = 0; i < 9; i ++) {
                 let randomNumber = await getRandom();
                 randomNumbers.push(randomNumber);
             }
-
+            let randomNumber = await getRandom();
+            let rangedRand = 95 + Math.floor(Math.random() * 5);
+            let firstRand = randomNumber + rangedRand;
+            randomNumbers.push(firstRand);
             console.log("Received Batch Random Number===========================>", randomNumbers);
             await setH13BatchRandom(callerAddress, randomNumbers, id)
             return
@@ -338,16 +337,15 @@ async function processH35BatchRequest (id, callerAddress) {
     while (retries < MAX_RETRIES) {
         try {
             let randomNumbers = [];
+            for(let i = 0; i < 9; i ++) {
+                let randomNumber = await getRandom();
+                randomNumbers.push(randomNumber);
+            }
             let randomNumber = await getRandom();
             // 80 ~ 98 random number
             let rangedRand = 80 + Math.floor(Math.random() * 18);
             let firstRand = randomNumber + rangedRand;
             randomNumbers.push(firstRand);
-            for(let i = 0; i < 9; i ++) {
-                let randomNumber = await getRandom();
-                randomNumbers.push(randomNumber);
-            }
-
             console.log("Received Batch Random Number===========================>", randomNumbers);
             await setH35BatchRandom(callerAddress, randomNumbers, id)
             return
@@ -367,16 +365,15 @@ async function processG13BatchRequest (id, callerAddress) {
     while (retries < MAX_RETRIES) {
         try {
             let randomNumbers = [];
-            let randomNumber = await getRandom();
-            // 70 ~ 95 random number
-            let rangedRand = 70 + Math.floor(Math.random() * 25);
-            let firstRand = randomNumber + rangedRand;
-            randomNumbers.push(firstRand);
             for(let i = 0; i < 9; i ++) {
                 let randomNumber = await getRandom();
                 randomNumbers.push(randomNumber);
             }
-
+            let randomNumber = await getRandom();
+            // 95 ~ 99 random number
+            let rangedRand = 90 + Math.floor(Math.random() * 5);
+            let firstRand = randomNumber + rangedRand;
+            randomNumbers.push(firstRand);
             console.log("Received Batch Random Number===========================>", randomNumbers);
             await setG13BatchRandom(callerAddress, randomNumbers, id)
             return
