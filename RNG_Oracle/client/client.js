@@ -157,55 +157,55 @@ async function processQueue () {
     while (pendingH13Requests.length > 0 && processedH13Requests < CHUNK_SIZE) {
         const req = pendingH13Requests.shift()
         await processH13Request(req.id, req.callerAddress)
-        pendingH13Requests++
+        processedH13Requests++
     }
 
     while (pendingH35Requests.length > 0 && processedH35Requests < CHUNK_SIZE) {
         const req = pendingH35Requests.shift()
         await processH35Request(req.id, req.callerAddress)
-        pendingH35Requests++
+        processedH35Requests++
     }
 
     while (pendingG13Requests.length > 0 && processedG13Requests < CHUNK_SIZE) {
         const req = pendingG13Requests.shift()
         await processG13Request(req.id, req.callerAddress)
-        pendingG13Requests++
+        processedG13Requests++
     }
 
     while (pendingG35Requests.length > 0 && processedG35Requests < CHUNK_SIZE) {
         const req = pendingG35Requests.shift()
         await processG35Request(req.id, req.callerAddress)
-        pendingG35Requests++
+        processedG35Requests++
     }
 
     while (pendingDLRequests.length > 0 && processedDLRequests < CHUNK_SIZE) {
         const req = pendingDLRequests.shift()
         await processDLRequest(req.id, req.callerAddress)
-        pendingDLRequests++
+        processedDLRequests++
     }
 
     while (pendingH13BatchRequests.length > 0 && processedH13BatchRequests < CHUNK_SIZE) {
         const req = pendingH13BatchRequests.shift()
         await processH13BatchRequest(req.id, req.callerAddress)
-        pendingH13BatchRequests++
+        processedH13BatchRequests++
     }
 
     while (pendingG13BatchRequests.length > 0 && processedG13BatchRequests < CHUNK_SIZE) {
         const req = pendingG13BatchRequests.shift()
         await processG13BatchRequest(req.id, req.callerAddress)
-        pendingG13BatchRequests++
+        processedG13BatchRequests++
     }
 
     while (pendingH35BatchRequests.length > 0 && processedH35BatchRequests < CHUNK_SIZE) {
         const req = pendingH35BatchRequests.shift()
         await processH35BatchRequest(req.id, req.callerAddress)
-        pendingH35BatchRequests++
+        processedH35BatchRequests++
     }
 
     while (pendingG35BatchRequests.length > 0 && processedG35BatchRequests < CHUNK_SIZE) {
         const req = pendingG35BatchRequests.shift()
         await processG35BatchRequest(req.id, req.callerAddress)
-        pendingG35BatchRequests++
+        processedG35BatchRequests++
     }
 }
 

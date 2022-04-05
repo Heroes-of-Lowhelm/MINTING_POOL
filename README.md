@@ -338,7 +338,7 @@ possible substats: ATK%, ATK, HP, HP%, DEF, DEF%, SPD, Crit.Rate%, Crit.DMG%, AC
 
   ** Gas Price - 2000000000
 
-  ** Set GearTrait contract address
+  ** Set GearTrait contract address (SetTraitAddr() transition)
 
 
 - Deploy Minting Contract
