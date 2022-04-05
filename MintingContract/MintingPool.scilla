@@ -852,6 +852,41 @@ transition callbackBatchH13(random_numbers: List (Uint256), id: Uint256)
     end
 end
 
+transition callbackBatchH35(random_numbers: List (Uint256), id: Uint256)
+    IsNotOracle _sender;
+    IsNotH35BatchPendingRequest id;
+    e = {_eventname: "RandomNumberH35BatchReceived"; random_numbers: random_numbers};
+    event e;
+    delete myH35BatchRequests[id];
+    processedH35BatchCallerCountTmp <- processedH35BatchCallerCount;
+    batchCallerAddress <- batchCallerH35Addresses[processedH35BatchCallerCountTmp];
+    delete batchCallerH35Addresses[processedH35BatchCallerCountTmp];
+    tmpVal = builtin add processedH35BatchCallerCountTmp one;
+    processedH35BatchCallerCount := tmpVal;
+
+    (* Call NFT contract's Mint function with the received random number *)
+    (* This contract address must be set as Minter in the NFT Contract *)
+    
+    heroesNFTAddressTmp <- heroesNFTAddress;
+    match heroesNFTAddressTmp with
+    | Some v =>
+        match batchCallerAddress with
+        | Some value =>
+            (* batchParams = cons_all_batch random_numbers value; *)
+            msg = {_tag: "BatchMint"; _recipient: v; _amount: zero; to: value; seeds: random_numbers; is_high_level: false};
+            msgs = one_msg msg;
+            send msgs               
+        | None =>
+            err = CodeIsCallerAddressNotSet;
+            ThrowError err
+        end
+        
+    | None =>
+        err = CodeIsNFTContractAddressNotSet;
+        ThrowError err
+    end
+end
+
 
 transition callbackBatchG13(random_numbers: List (Uint256), id: Uint256)
     IsNotOracle _sender;
