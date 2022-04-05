@@ -9,3 +9,4 @@ package-lock.json
 cache
 artifacts
 MintingContract/Gears copy.scilla
+RNG_Oracle/client/client.zip
