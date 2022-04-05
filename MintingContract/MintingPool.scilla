@@ -470,6 +470,31 @@ transition BatchMint13Gears()
 end
 
 (* @dev: Transition for users to Batch Mint 3*-5* Heroes.This transition invokes requestBatchRandomNumber() transition in the oracle contract   *)
+transition BatchMint35Heroes()
+    oracleAddressTmp <- oracleAddress;
+    heroesNFTAddressTmp <- heroesNFTAddress;
+    match oracleAddressTmp with
+    | Some v =>
+        match heroesNFTAddressTmp with
+        | Some heroesValue =>
+            msg = {_tag: "requestH35BatchRandomNumber"; _recipient: v; _amount: zero};
+            msgs = one_msg msg;
+            send msgs;
+            requestedH35BatchCallerCountTmp <- requestedH35BatchCallerCount;
+            batchCallerH35Addresses[requestedH35BatchCallerCountTmp] := _sender;
+            tmpVal = builtin add requestedH35BatchCallerCountTmp one;
+            requestedH35BatchCallerCount := tmpVal
+        | None =>
+            err = CodeIsNFTContractAddressNotSet;
+            ThrowError err
+        end
+    | None =>
+        err = CodeIsOracleAddressNotSet;
+        ThrowError err
+    end
+end
+
+(* @dev: Transition for users to Batch Mint 3*-5* Gears.This transition invokes requestBatchRandomNumber() transition in the oracle contract   *)
 transition BatchMint35Gears()
     oracleAddressTmp <- oracleAddress;
     gerasNFTAddressTmp <- gearsNFTAddress;
@@ -493,6 +518,7 @@ transition BatchMint35Gears()
         ThrowError err
     end
 end
+
 
 (* @dev: Receive request id from the oracle contract. Only oracle contract allowed to invoke.   *)
 (* param id:      Request id.                                                                   *)
